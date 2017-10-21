@@ -1,5 +1,5 @@
 #pragma once
-#include "platformDefinitions.h"
+#include "MUtilityPlatformDefinitions.h"
 
 #if PLATFORM == PLATFORM_WINDOWS
 #define WIN32_LEAN_AND_MEAN

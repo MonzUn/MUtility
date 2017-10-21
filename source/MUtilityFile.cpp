@@ -1,8 +1,8 @@
-#include "interface/fileUtility.h"
+#include "interface/MUtilityFile.h"
 
-#include "interface/errorUtility.h"
-#include "interface/platformDefinitions.h"
-#include "interface/windowsInclude.h"
+#include "interface/MUtilityError.h"
+#include "interface/MUtilityPlatformDefinitions.h"
+#include "interface/MUtilityWindowsInclude.h"
 
 #include <string>
 #include <direct.h>
