@@ -2,7 +2,7 @@
 #include <thread>
 #include <mutex>
 
-namespace ThreadingUtility
+namespace MutilityThreading
 {
 	void JoinThread( std::thread& thread )
 	{
