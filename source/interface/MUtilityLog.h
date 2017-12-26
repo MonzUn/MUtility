@@ -11,7 +11,7 @@
 		#define MLOG_ERROR(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_ERROR, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStream.str(std::string())
 		#define MLOG_WARNING(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_WARNING, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStream.str(std::string())
 		#define MLOG_INFO(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_INFO, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStream.str(std::string())
-		#define MLOG_DEBUG(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_DEBUG, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStreamstr.str(std::string())
+		#define MLOG_DEBUG(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_DEBUG, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStream.str(std::string())
 
 	#else
 
