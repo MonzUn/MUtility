@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 #include <sstream>
+#include <vector>
 
 #ifndef MUTILITY_DISABLE_LOGGING
 
@@ -57,10 +58,18 @@ namespace MUtilityLog
 #ifndef MUTILITY_DISABLE_LOGGING
 	static std::stringstream InputStream; // Do not use externally! Only used for MUtility logging macros
 #endif
-	void Initialize();
 	void Shutdown();
 
 	void SetInterest(const std::string& category, MUtilityLogLevel::LogLevel newInterestLevels);
 	void Log(const std::string& message, const std::string& category, MUtilityLogLevel::LogLevel logLevel, MUtilityLogMode logMode = MUtilityLogMode::Normal, const char* file = nullptr, const char* line = nullptr, const char* functionName = nullptr);
 	void FlushToDisk();
+
+	void SetMaxUnradMessageCount(int32_t maxUnreadMessages);
+
+	bool FetchUnreadMessages(std::string& outConcatenatedMessages);
+	bool FetchUnreadMessages(std::vector<std::string>& outMessageList);
+
+	std::string GetLog(const std::string& category);
+	std::string GetAllInterestLog();
+	std::string GetFullLog();
 }
