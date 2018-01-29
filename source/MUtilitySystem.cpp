@@ -1,11 +1,16 @@
 #include "interface/MUtilitySystem.h"
 
 #if PLATFORM == PLATFORM_WINDOWS
-#include <process.h>  
+#include <process.h>
+
+#include <Shlwapi.h>
+#pragma comment(lib, "shlwapi.lib")
 #else
 #include <sys/types.h>
 #include <unistd.h>
 #endif
+
+constexpr uint32_t EXECUTABLE_PATH_MAX_LENGTH = 10000;
 
 int MUtility::GetPid()
 {
@@ -15,3 +20,19 @@ int MUtility::GetPid()
 	return static_cast<int>(getpid());
 #endif
 }
+
+void MUtility::GetExecutablePath(std::string& outPath) // TODODB: Implement support for linux platform
+{
+#if PLATFORM != PLATFORM_WINDOWS
+		return "Executable path is only available on the windows platform";
+#else
+		char path[EXECUTABLE_PATH_MAX_LENGTH];
+		GetModuleFileName(NULL, path, EXECUTABLE_PATH_MAX_LENGTH);
+		PathRemoveFileSpec(path);
+		outPath = std::string(path);
+#endif
+}
+
+#if PLATFORM == PLATFORM_WINDOWS
+
+#endif
