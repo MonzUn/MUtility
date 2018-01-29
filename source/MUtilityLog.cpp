@@ -73,6 +73,7 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 
 	default:
 		MLOG_WARNING("Invalid loglevel supplied; call ignored", MUTILITY_LOG_CATEGORY_LOG);
+		LOG_LOCK.unlock();
 		return;
 	}
 
@@ -86,6 +87,7 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 		break;
 	default:
 		MLOG_WARNING("Invalid logMode supplied; call ignored", MUTILITY_LOG_CATEGORY_LOG);
+		LOG_LOCK.unlock();
 		return;
 	}
 
