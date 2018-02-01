@@ -16,9 +16,6 @@ if(MSVC)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D \"_CRT_SECURE_NO_WARNINGS\"")
 endif(MSVC)
 
-# Set output directory
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ProjectRoot}/output/)
-
 # Ensure build type set
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Debug)
@@ -31,12 +28,15 @@ file(GLOB_RECURSE SOURCE_DIRECTORIES
 )
 
 # Create static library
-ADD_LIBRARY( ${CMAKE_PROJECT_NAME} STATIC
+ADD_LIBRARY( ${PROJECT_NAME} STATIC
    	${SOURCE_DIRECTORIES}
 )
 
+# Set output directory
+set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ProjectRootAbsolute}/output/)
+
 # Make sure that the linker language gets set to C++
-set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 # --- DEBUG COPY PASTE ---
 #message("|||--- TEST ---||| ${var}")
