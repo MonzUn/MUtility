@@ -8,7 +8,7 @@ project(MUtility CXX)
 string(TOLOWER ${CMAKE_SYSTEM_NAME} OperatingSystemNameLowerCase)
 
 # Root directory
-set(ProjectRoot ${MUtility_SOURCE_DIR}/../)
+set(ProjectRoot ${CMAKE_CURRENT_LIST_DIR}/../)
 get_filename_component(ProjectRootAbsolute ${ProjectRoot} ABSOLUTE)
 
 # Visual Studio settings
