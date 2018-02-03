@@ -13,13 +13,8 @@ get_filename_component(ProjectRootAbsolute ${ProjectRoot} ABSOLUTE)
 
 # Visual Studio settings
 if(MSVC)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D \"_CRT_SECURE_NO_WARNINGS\"")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _CRT_SECURE_NO_WARNINGS")
 endif(MSVC)
-
-# Ensure build type set
-if (NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Debug)
-endif()
 
 # List source file directories
 file(GLOB_RECURSE SOURCE_DIRECTORIES
