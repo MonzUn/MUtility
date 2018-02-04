@@ -10,6 +10,7 @@ project/.vs/
 project/*.dir
 project/CMakeFiles/
 project/CMakeCache.txt
+project/CmakeOutput.txt
 project/cmake_install.cmake
 project/x86
 project/x64
