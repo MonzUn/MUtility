@@ -108,7 +108,7 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 void MUtilityLog::FlushToDisk()
 {
 	LOG_LOCK.lock();
-	MUtilityFile::CreateFolder("logs");
+	MUtilityFile::CreateDir("logs");
 
 	std::ofstream outStream;
 	outStream.open("logs/mainLog.txt", std::ofstream::out | std::ofstream::trunc);
@@ -125,7 +125,7 @@ void MUtilityLog::FlushToDisk()
 		outStream.close();
 	}
 
-	MUtilityFile::CreateFolder("logs/categories");
+	MUtilityFile::CreateDir("logs/categories");
 	for (auto it = Logs.begin(); it != Logs.end(); ++it)
 	{
 		outStream.open("logs/categories/" + it->first + ".txt", std::ofstream::out | std::ofstream::trunc);
