@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 namespace MUtilityFile
 {
@@ -6,4 +7,6 @@ namespace MUtilityFile
 
 	bool DirectoryExists(const char* folderPath);
 	bool FileExists(const char* filePath);
+
+	std::string GetDirectoryPathFromFilePath(const std::string& filePath);
 }

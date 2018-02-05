@@ -3,8 +3,6 @@
 #include "interface/MUtilityError.h"
 #include "interface/MUtilityPlatformDefinitions.h"
 #include "interface/MUtilityWindowsInclude.h"
-
-#include <string>
 #include <direct.h>
 
 bool MUtilityFile::CreateDir(const char* directoryPath)
@@ -63,6 +61,17 @@ bool MUtilityFile::FileExists(const char* filePath)
 		file.close();
 	}
 
+	return toReturn;
+}
+
+std::string MUtilityFile::GetDirectoryPathFromFilePath(const std::string& filePath)
+{
+	std::string toReturn = "";
+	const size_t last_slash_idx = filePath.find_last_of("\\/");
+	if (std::string::npos != last_slash_idx)
+	{
+		toReturn = filePath.substr(0, last_slash_idx);
+	}
 	return toReturn;
 }
 }
