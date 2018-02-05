@@ -5,5 +5,5 @@
 namespace MUtility
 {
 	int		GetPid();
-	void	GetExecutablePath(std::string& outPath);
+	void	GetExecutableDirectoryPath(std::string& outPath);
 }

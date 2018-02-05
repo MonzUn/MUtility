@@ -21,7 +21,7 @@ int MUtility::GetPid()
 #endif
 }
 
-void MUtility::GetExecutablePath(std::string& outPath) // TODODB: Implement support for linux platform
+void MUtility::GetExecutableDirectoryPath(std::string& outPath) // TODODB: Implement support for linux platform
 {
 #if PLATFORM != PLATFORM_WINDOWS
 		return "Executable path is only available on the windows platform";
