@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.8.2)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 # Project name
@@ -13,7 +13,7 @@ get_filename_component(ProjectRootAbsolute ${ProjectRoot} ABSOLUTE)
 
 # Visual Studio settings
 if(MSVC)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _CRT_SECURE_NO_WARNINGS")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _CRT_SECURE_NO_WARNINGS")
 endif(MSVC)
 
 # List source file directories
