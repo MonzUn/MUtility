@@ -9,4 +9,6 @@ namespace MUtilityFile
 	bool FileExists(const char* filePath);
 
 	std::string GetDirectoryPathFromFilePath(const std::string& filePath);
+	std::string	GetFileContentAsString(const std::string& filePath);
+	uint64_t GetFileContentSize(const std::string& filePath);
 }

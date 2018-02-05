@@ -1,9 +1,12 @@
 #include "interface/MUtilityFile.h"
-
 #include "interface/MUtilityError.h"
+#include "interface/MUtilityLog.h"
 #include "interface/MUtilityPlatformDefinitions.h"
 #include "interface/MUtilityWindowsInclude.h"
 #include <direct.h>
+#include <fstream>
+
+#define MUTILITY_LOG_CATEGORY_FILE "MUtilityFile"
 
 bool MUtilityFile::CreateDir(const char* directoryPath)
 {
@@ -74,4 +77,44 @@ std::string MUtilityFile::GetDirectoryPathFromFilePath(const std::string& filePa
 	}
 	return toReturn;
 }
+
+std::string	MUtilityFile::GetFileContentAsString(const std::string& filePath)
+{
+	std::string toReturn = "";
+	std::ifstream file = std::ifstream(filePath, std::ios_base::in | std::ios_base::binary);
+	if (file.is_open())
+	{
+		uint64_t fileContentSize = GetFileContentSize(filePath);
+		char* fileContent = static_cast<char*>(malloc(fileContentSize + 1)); // +1 For Null terminator
+		fileContent[fileContentSize] = '\0';
+		file.read(fileContent, fileContentSize);
+		file.close();
+
+		toReturn = std::string(fileContent);
+
+		if (fileContent != nullptr)
+		{
+			toReturn = std::string(fileContent);
+			free(fileContent);
+		}
+	}
+	else
+		MLOG_WARNING("Failed to find file; Path = " << filePath, MUTILITY_LOG_CATEGORY_FILE);
+
+	return toReturn;
+}
+
+uint64_t MUtilityFile::GetFileContentSize(const std::string& filePath)
+{
+	uint64_t toReturn = 0;
+	std::ifstream file = std::ifstream(filePath, std::ios_base::binary | std::ios_base::ate);
+	if (file.is_open())
+	{
+		toReturn = static_cast<uint64_t>(file.tellg());
+		file.close();
+	}
+	else
+		MLOG_WARNING("Failed to find file; Path = " << filePath, MUTILITY_LOG_CATEGORY_FILE);
+
+	return toReturn;
 }
