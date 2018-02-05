@@ -1,4 +1,5 @@
 #include "interface/MUtilitySystem.h"
+#include <algorithm>
 
 #if PLATFORM == PLATFORM_WINDOWS
 #include <process.h>
@@ -30,9 +31,6 @@ void MUtility::GetExecutableDirectoryPath(std::string& outPath) // TODODB: Imple
 		GetModuleFileName(NULL, path, EXECUTABLE_PATH_MAX_LENGTH);
 		PathRemoveFileSpec(path);
 		outPath = std::string(path);
+		std::replace(outPath.begin(), outPath.end(), '\\', '/');
 #endif
 }
-
-#if PLATFORM == PLATFORM_WINDOWS
-
-#endif
