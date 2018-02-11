@@ -1,5 +1,4 @@
 #include "interface/MUtilityFile.h"
-#include "interface/MUtilityError.h"
 #include "interface/MUtilityLog.h"
 #include "interface/MUtilityPlatformDefinitions.h"
 #include "interface/MUtilityWindowsInclude.h"
@@ -25,11 +24,11 @@ bool MUtilityFile::CreateDir(const char* directoryPath)
 			return true;
 
 		case ENOENT:
-			MUtilityError::Error = std::string(__func__) + ": Unable to create diretory on path \"" + std::string(directoryPath) + "\" since the path is invalid";
+			MLOG_WARNING("Unable to create diretory on path \"" << directoryPath << "\" since the path is invalid", MUTILITY_LOG_CATEGORY_FILE);
 			return false;
 
 		default:
-			MUtilityError::Error = std::string(__func__) + ": Unable to create directory - Unknown error", "FileUtility";
+			MLOG_WARNING("Unable to create directory at path \"" << directoryPath << "\" - Unknown error", MUTILITY_LOG_CATEGORY_FILE);
 			return false;
 			break;
 		}
