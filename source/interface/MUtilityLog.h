@@ -9,17 +9,17 @@
 
 	#ifdef _DEBUG
 
-		#define MLOG_ERROR(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_ERROR, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStream.str(std::string())
-		#define MLOG_WARNING(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_WARNING, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStream.str(std::string())
-		#define MLOG_INFO(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_INFO, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStream.str(std::string())
-		#define MLOG_DEBUG(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_DEBUG, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::InputStream.str(std::string())
+		#define MLOG_ERROR(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_ERROR, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
+		#define MLOG_WARNING(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_WARNING, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
+		#define MLOG_INFO(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_INFO, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
+		#define MLOG_DEBUG(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_DEBUG, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
 
 	#else
 
-		#define MLOG_ERROR(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_ERROR), MUtilityLog::InputStream.str(std::string())
-		#define MLOG_WARNING(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_WARNING), MUtilityLog::InputStream.str(std::string())
-		#define MLOG_INFO(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_INFO), MUtilityLog::InputStream.str(std::string())
-		#define MLOG_DEBUG(message, category) MUtilityLog::InputStream << message, MUtilityLog::Log(MUtilityLog::InputStream.str(), category, MUtilityLogLevel::LOG_DEBUG), MUtilityLog::InputStream.str(std::string())
+		#define MLOG_ERROR(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_ERROR), MUtilityLog::GetInputStream().str(std::string())
+		#define MLOG_WARNING(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_WARNING), MUtilityLog::GetInputStream().str(std::string())
+		#define MLOG_INFO(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_INFO), MUtilityLog::GetInputStream().str(std::string())
+		#define MLOG_DEBUG(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_DEBUG), MUtilityLog::GetInputStream().str(std::string())
 
 	#endif
 
@@ -55,9 +55,7 @@ enum class MUtilityLogMode
 
 namespace MUtilityLog
 {
-#ifndef MUTILITY_DISABLE_LOGGING
-	static std::stringstream InputStream; // Do not use externally! Only used for MUtility logging macros
-#endif
+	void Initialize();
 	void Shutdown();
 
 	void SetInterest(const std::string& category, MUtilityLogLevel::LogLevel newInterestLevels);
@@ -69,7 +67,8 @@ namespace MUtilityLog
 	bool FetchUnreadMessages(std::string& outConcatenatedMessages);
 	bool FetchUnreadMessages(std::vector<std::string>& outMessageList);
 
+	std::stringstream& GetInputStream(); // Intended for MLOG macros
 	std::string GetLog(const std::string& category);
 	std::string GetAllInterestLog();
 	std::string GetFullLog();
-}
+};

@@ -1,54 +1,64 @@
 #include "interface/MUtilityLog.h"
+#include "MUtilityLogInternal.h"
 #include "interface/MUtilityFile.h"
 #include <fstream>
 #include <mutex>
 #include <sstream>
-#include <unordered_map>
 
 #define MUTILITY_LOG_CATEGORY_LOG "MUtilityLog"
 
-static std::mutex LOG_LOCK;
-static int32_t MAX_UNREAD_MESSAGES = 100;
-
-struct LogValuePair
+namespace MUtilityLog
 {
-	LogValuePair(MUtilityLogLevel::LogLevel initialInterestLevels) : InterestLevels(initialInterestLevels) {}
+	std::unordered_map<std::string, LogValuePair>* m_Logs;
+	std::vector<std::string>* m_UnreadMessages;
 
-	MUtilityLogLevel::LogLevel	InterestLevels;
-	std::stringstream			Log;
-};
+	std::stringstream* m_InputStream;
+	std::stringstream* m_MainLog;
+	std::stringstream* m_FullInterestLog;
 
-std::unordered_map<std::string, LogValuePair> Logs;
-std::stringstream MainLog;
-std::stringstream FullInterestLog;
+	std::mutex m_LogLock;
+	int32_t m_MaxUnreadMessages = 100;
+}
 
-std::vector<std::string> UnreadMessages;
+// ---------- INTERFACE ----------
 
-typedef std::unordered_map<std::string, LogValuePair>::iterator LogMapIterator;
+void MUtilityLog::Initialize()
+{
+	m_Logs = new std::unordered_map<std::string, LogValuePair>();
+	m_UnreadMessages = new std::vector<std::string>();
 
-LogMapIterator RegisterCategory(const char* categoryName, MUtilityLogLevel::LogLevel initialInterestLevels);
+	m_InputStream = new std::stringstream();
+	m_MainLog = new std::stringstream();
+	m_FullInterestLog = new std::stringstream();
+}
 
 void MUtilityLog::Shutdown()
 {
 	FlushToDisk();
+
+	delete m_Logs;
+	delete m_UnreadMessages;
+	delete m_InputStream;
+	delete m_MainLog;
+	delete m_FullInterestLog;
 }
 
 void MUtilityLog::SetInterest(const std::string& category, MUtilityLogLevel::LogLevel newInterestLevels)
 {
-	LOG_LOCK.lock();
-	LogMapIterator iterator = Logs.find(category);
-	if (iterator == Logs.end())
+	m_LogLock.lock();
+	LogMapIterator iterator = m_Logs->find(category);
+	if (iterator == m_Logs->end())
 		iterator = RegisterCategory(category.c_str(), MUtilityLogLevel::ALL); // If the category is not yet registered; register it.
 
 	iterator->second.InterestLevels = newInterestLevels;
-	LOG_LOCK.unlock();
+	m_LogLock.unlock();
 }
 
 void MUtilityLog::Log(const std::string& message, const std::string& category, MUtilityLogLevel::LogLevel logLevel, MUtilityLogMode logMode, const char* file, const char* line, const char* functionName)
 {
-	LOG_LOCK.lock();
-	LogMapIterator iterator = Logs.find(category);
-	if (iterator == Logs.end())
+	m_LogLock.lock();
+	LogMapIterator iterator = m_Logs->find(category);
+	if (iterator == m_Logs->end())
 		iterator = RegisterCategory(category.c_str(), MUtilityLogLevel::ALL); // If the category is not yet registered; register it.
 
 	std::stringstream localStream;
@@ -73,7 +83,7 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 
 	default:
 		MLOG_WARNING("Invalid loglevel supplied; call ignored", MUTILITY_LOG_CATEGORY_LOG);
-		LOG_LOCK.unlock();
+		m_LogLock.unlock();
 		return;
 	}
 
@@ -87,7 +97,7 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 		break;
 	default:
 		MLOG_WARNING("Invalid logMode supplied; call ignored", MUTILITY_LOG_CATEGORY_LOG);
-		LOG_LOCK.unlock();
+		m_LogLock.unlock();
 		return;
 	}
 
@@ -96,37 +106,37 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 	if (logLevel & iterator->second.InterestLevels)
 	{
 		iterator->second.Log << fullMessage;
-		MainLog << fullMessage;
+		*m_MainLog << fullMessage;
 
-		if (UnreadMessages.size() < MAX_UNREAD_MESSAGES)
-			UnreadMessages.push_back(fullMessage);
+		if (m_UnreadMessages->size() < m_MaxUnreadMessages)
+			m_UnreadMessages->push_back(fullMessage);
 	}
-	FullInterestLog << fullMessage;
-	LOG_LOCK.unlock();
+	*m_FullInterestLog << fullMessage;
+	m_LogLock.unlock();
 }
 
 void MUtilityLog::FlushToDisk()
 {
-	LOG_LOCK.lock();
+	m_LogLock.lock();
 	MUtilityFile::CreateDir("logs");
 
 	std::ofstream outStream;
 	outStream.open("logs/mainLog.txt", std::ofstream::out | std::ofstream::trunc);
 	if (outStream.is_open())
 	{
-		outStream << MainLog.rdbuf();
+		outStream << m_MainLog->rdbuf();
 		outStream.close();
 	}
 
 	outStream.open("logs/fullInterestLog.txt", std::ofstream::out | std::ofstream::trunc);
 	if (outStream.is_open())
 	{
-		outStream << FullInterestLog.rdbuf();
+		outStream << m_FullInterestLog->rdbuf();
 		outStream.close();
 	}
 
 	MUtilityFile::CreateDir("logs/categories");
-	for (auto it = Logs.begin(); it != Logs.end(); ++it)
+	for (auto it = m_Logs->begin(); it != m_Logs->end(); ++it)
 	{
 		outStream.open("logs/categories/" + it->first + ".txt", std::ofstream::out | std::ofstream::trunc);
 		if (outStream.is_open())
@@ -134,83 +144,89 @@ void MUtilityLog::FlushToDisk()
 			outStream << it->second.Log.rdbuf();
 			outStream.close();
 		}
-	}
-	LOG_LOCK.unlock();
+	}m_LogLock.unlock();
 }
 
 void MUtilityLog::SetMaxUnradMessageCount(int32_t maxUnreadMessages)
 {
-	LOG_LOCK.lock();
-	MAX_UNREAD_MESSAGES = maxUnreadMessages;
-	LOG_LOCK.unlock();
+	m_LogLock.lock();
+	m_MaxUnreadMessages = maxUnreadMessages;
+	m_LogLock.unlock();
 }
 
 bool MUtilityLog::FetchUnreadMessages(std::string& outConcatenatedMessages)
 {
-	LOG_LOCK.lock();
-	bool newMessagesExists = UnreadMessages.size() > 0;
+	m_LogLock.lock();
+	bool newMessagesExists = m_UnreadMessages->size() > 0;
 
-	for (int i = 0; i < UnreadMessages.size(); ++i)
+	for (int i = 0; i < m_UnreadMessages->size(); ++i)
 	{
-		outConcatenatedMessages += UnreadMessages[i];
+		outConcatenatedMessages += (*m_UnreadMessages)[i];
 	}
-	UnreadMessages.clear();
-	LOG_LOCK.unlock();
+	m_UnreadMessages->clear();
+	m_LogLock.unlock();
 
 	return newMessagesExists;
 }
 
 bool MUtilityLog::FetchUnreadMessages(std::vector<std::string>& outMessageList)
 {
-	LOG_LOCK.lock();
-	bool newMessagesExists = UnreadMessages.size() > 0;
+	m_LogLock.lock();
+	bool newMessagesExists = m_UnreadMessages->size() > 0;
 
-	outMessageList = UnreadMessages;
-	UnreadMessages.clear();
-	LOG_LOCK.unlock();
+	outMessageList = *m_UnreadMessages;
+	m_UnreadMessages->clear();
+	m_LogLock.unlock();
 
 	return newMessagesExists;
 }
 
+std::stringstream& MUtilityLog::GetInputStream()
+{
+	return *m_InputStream;
+}
+
 std::string MUtilityLog::GetLog(const std::string& category)
 {
-	LOG_LOCK.lock();
+	m_LogLock.lock();
 	std::string toReturn = "";
 
-	LogMapIterator iterator = Logs.find(category);
-	if (iterator != Logs.end())
+	LogMapIterator iterator = m_Logs->find(category);
+	if (iterator != m_Logs->end())
 	{
 		toReturn = iterator->second.Log.str();
 	}
 	MLOG_WARNING("Attempted to get log for category \"" << category << "\" but no such category exists", MUTILITY_LOG_CATEGORY_LOG);
 
-	LOG_LOCK.unlock();
+	m_LogLock.unlock();
 	return toReturn;
 }
 
 std::string MUtilityLog::GetAllInterestLog()
 {
-	LOG_LOCK.lock();
-	std::string toReturn = MainLog.str();
-	LOG_LOCK.unlock();
+	m_LogLock.lock();
+	std::string toReturn = m_MainLog->str();
+	m_LogLock.unlock();
 	return toReturn;
 }
 
 std::string MUtilityLog::GetFullLog()
 {
-	LOG_LOCK.lock();
-	std::string toReturn = FullInterestLog.str();
-	LOG_LOCK.unlock();
+	m_LogLock.lock();
+	std::string toReturn = m_FullInterestLog->str();
+	m_LogLock.unlock();
 	return toReturn;
 }
 
-LogMapIterator RegisterCategory(const char* categoryName, MUtilityLogLevel::LogLevel initialInterestLevels)
+// ---------- INTERNAL ----------
+
+LogMapIterator MUtilityLog::RegisterCategory(const char* categoryName, MUtilityLogLevel::LogLevel initialInterestLevels)
 {
-	if (Logs.find(categoryName) != Logs.end())
+	if (m_Logs->find(categoryName) != m_Logs->end())
 	{
 		MLOG_WARNING("Attempted to register logger category \"" << std::string(categoryName) + "\" multiple times; call ignored", MUTILITY_LOG_CATEGORY_LOG);
-		return Logs.end();
+		return m_Logs->end();
 	}
 
-	return Logs.emplace(categoryName, initialInterestLevels).first;
+	return m_Logs->emplace(categoryName, initialInterestLevels).first;
 }
