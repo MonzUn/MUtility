@@ -1,4 +1,5 @@
 #include "interface/MUtilitySystem.h"
+#include "interface/MUtilityLog.h"
 #include <algorithm>
 
 #if PLATFORM == PLATFORM_WINDOWS
@@ -10,6 +11,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 #endif
+
+#define MUTILITY_LOG_CATEGORY_SYSTEM "MUtilitySystem"
 
 constexpr uint32_t EXECUTABLE_PATH_MAX_LENGTH = 10000;
 
@@ -36,4 +39,26 @@ std::string MUtility::GetExecutableDirectoryPath() // TODODB: Implement support 
 #endif
 
 		return returnPath;
+}
+
+void MUtility::UnblockSTDIn()
+{
+#if PLATFORM != PLATFORM_WINDOWS
+	MLOG_WARNING("Function called on non supported system", MUTILITY_LOG_CATEGORY_SYSTEM);
+	return;
+#else
+	INPUT_RECORD inputRecord[2];
+	inputRecord[0].EventType = KEY_EVENT;
+	inputRecord[0].Event.KeyEvent.bKeyDown = TRUE;
+	inputRecord[0].Event.KeyEvent.dwControlKeyState = 0;
+	inputRecord[0].Event.KeyEvent.uChar.UnicodeChar = VK_RETURN;
+	inputRecord[0].Event.KeyEvent.wRepeatCount = 1;
+	inputRecord[0].Event.KeyEvent.wVirtualKeyCode = VK_RETURN;
+	inputRecord[0].Event.KeyEvent.wVirtualScanCode = MapVirtualKey(VK_RETURN, MAPVK_VK_TO_VSC);
+	inputRecord[1] = inputRecord[0];
+	inputRecord[1].Event.KeyEvent.bKeyDown = FALSE;
+
+	DWORD temp;
+	WriteConsoleInput(GetStdHandle(STD_INPUT_HANDLE), inputRecord, 2, &temp);
+#endif
 }

@@ -6,4 +6,6 @@ namespace MUtility
 {
 	int			GetPid();
 	std::string GetExecutableDirectoryPath();
+
+	void		UnblockSTDIn();
 }
