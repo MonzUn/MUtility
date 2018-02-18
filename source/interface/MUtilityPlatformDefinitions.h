@@ -3,12 +3,18 @@
 #define PLATFORM_LINUX		2
 #define PLATFORM_MAC		3
 
+#define COMPILER_MSVC		1
+
 #if defined _WIN32
-#define PLATFORM PLATFORM_WINDOWS
+	#define PLATFORM PLATFORM_WINDOWS
 #elif defined __APPLE__
-#define PLATFORM PLATFORM_MAC
+	#define PLATFORM PLATFORM_MAC
 #elif defined __linux
-#define PLATFORM PLATFORM_LINUX
+	#define PLATFORM PLATFORM_LINUX
+#endif
+
+#if defined _MSC_VER
+	#define COMPILER COMPILER_MSVC
 #endif
 
 #if PLATFORM == PLATFORM_WINDOWS
