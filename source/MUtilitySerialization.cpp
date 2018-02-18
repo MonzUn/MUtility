@@ -2,6 +2,7 @@
 #include "interface/MUtilityDataSizes.h"
 
 using namespace DataSizes;
+using MUtility::Byte;
 
 //************************** Utility **************************
 
