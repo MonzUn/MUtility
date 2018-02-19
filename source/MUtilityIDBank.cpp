@@ -54,6 +54,11 @@ bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
 	return true;
 }
 
+MUtilityID MUtilityIDBank::PeekNextID() const
+{
+	return m_NextID;
+}
+
 bool MUtilityIDBank::IsIDActive(MUtilityID id) const
 {
 	if (id < 0)
@@ -138,6 +143,11 @@ bool MUtilityBitwiseIDBank::ReturnID(MUtilityBitwiseID idToReturn)
 	--m_Count;
 	m_RecycledIDs |= idToReturn;
 	return true;
+}
+
+MUtilityBitwiseID MUtilityBitwiseIDBank::PeekNextID() const
+{
+	return m_NextID;
 }
 
 bool MUtilityBitwiseIDBank::IsIDActive(MUtilityBitwiseID id) const

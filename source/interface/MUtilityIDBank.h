@@ -16,6 +16,8 @@ namespace MUtility
 		MUtilityID GetID();
 		bool ReturnID(MUtilityID idToreturn);
 
+		MUtilityID PeekNextID() const;
+
 		bool IsIDActive(MUtilityID id) const;
 		bool IsIDRecycled(MUtilityID id) const;
 
@@ -33,6 +35,8 @@ namespace MUtility
 	public:
 		MUtilityBitwiseID GetID();
 		bool ReturnID(MUtilityBitwiseID idToReturn);
+
+		MUtilityBitwiseID PeekNextID() const;
 
 		bool IsIDActive(MUtilityBitwiseID id) const;
 		bool IsIDRecycled(MUtilityBitwiseID id) const;
