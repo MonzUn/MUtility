@@ -13,17 +13,17 @@ int32_t MUtility::GetSetBitCount(const BitSet& bitset)
 	return counter;
 }
 
-BitSet MUtility::GetFirstSetBit(const BitSet& bitset)
+BitSet MUtility::GetLowestSetBit(const BitSet& bitset)
 {
-	return static_cast<BitSet>(1) << GetFirstSetBitIndex(bitset);
+	return static_cast<BitSet>(1) << GetLowestSetBitIndex(bitset);
 }
 
-BitSet MUtility::GetLastSetBit(const BitSet& bitset)
+BitSet MUtility::GetHighestSetBit(const BitSet& bitset)
 {
-	return static_cast<BitSet>(1) << GetLastSetBitIndex(bitset);
+	return static_cast<BitSet>(1) << GetHighestSetBitIndex(bitset);
 }
 
-int32_t MUtility::GetFirstSetBitIndex(const BitSet& bitset)
+int32_t MUtility::GetLowestSetBitIndex(const BitSet& bitset)
 {
 	if (bitset == EMPTY_BITSET)
 		return EMPTY_BITSET;
@@ -36,7 +36,7 @@ int32_t MUtility::GetFirstSetBitIndex(const BitSet& bitset)
 	return EMPTY_BITSET;
 }
 
-int32_t MUtility::GetLastSetBitIndex(const BitSet& bitset)
+int32_t MUtility::GetHighestSetBitIndex(const BitSet& bitset)
 {
 	if (bitset == EMPTY_BITSET)
 		return EMPTY_BITSET;

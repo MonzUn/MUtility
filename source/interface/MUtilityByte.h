@@ -45,9 +45,9 @@ namespace MUtility
 
 
 	int32_t GetSetBitCount(const BitSet& bitset);
-	BitSet	GetFirstSetBit(const BitSet& bitset);
-	BitSet	GetLastSetBit(const BitSet& bitset);
-	int32_t	GetFirstSetBitIndex(const BitSet& bitset);
-	int32_t	GetLastSetBitIndex(const BitSet& bitset);
+	BitSet	GetLowestSetBit(const BitSet& bitset);
+	BitSet	GetHighestSetBit(const BitSet& bitset);
+	int32_t	GetLowestSetBitIndex(const BitSet& bitset);
+	int32_t	GetHighestSetBitIndex(const BitSet& bitset);
 	void	BitSetToString(const BitSet& bitset, char* buffer, int32_t bufferSize);
 }

@@ -94,7 +94,7 @@ MUtilityBitwiseID MUtilityBitwiseIDBank::MUtilityBitwiseIDBank::GetID()
 	}
 	else
 	{
-		toReturn = MUtility::GetFirstSetBit(m_RecycledIDs);
+		toReturn = MUtility::GetLowestSetBit(m_RecycledIDs);
 		m_RecycledIDs &= ~toReturn;
 	}
 
