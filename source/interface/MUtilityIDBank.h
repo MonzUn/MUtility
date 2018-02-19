@@ -6,31 +6,42 @@
 #include <mutex>
 #include <stdint.h>
 #include <type_traits>
-#include <vector>
+#include <deque>
 
-class MUtilityIDBank
+namespace MUtility
 {
-public:
-	MUtilityID GetID();
-	bool ReturnID(MUtilityID idToreturn);
-	bool IsIDActive(MUtilityID id);
-	bool IsIDRecycled(MUtilityID id);
+	class MUtilityIDBank
+	{
+	public:
+		MUtilityID GetID();
+		bool ReturnID(MUtilityID idToreturn);
 
-private:
-	MUtilityID m_NextID = 0;
-	std::vector<MUtilityID> m_RecycledIDs;
-	std::mutex m_Lock;
-};
+		bool IsIDActive(MUtilityID id) const;
+		bool IsIDRecycled(MUtilityID id) const;
 
-class MUtilityBitwiseIDBank
-{
-public:
-	MUtilityBitwiseID GetID();
-	bool ReturnID(MUtilityBitwiseID idToReturn);
-	bool IsIDActive(MUtilityBitwiseID id);
-	bool IsIDRecycled(MUtilityBitwiseID id);
+		uint32_t GetCount() const;
 
-private:
-	std::atomic<MUtilityBitwiseID> m_NextID = 1;
-	std::atomic<MUtilityBitwiseID> m_RecycledIDs = 0;
-};
+	private:
+		MUtilityID m_NextID = 0;
+		std::deque<MUtilityID> m_RecycledIDs;
+		std::atomic<uint32_t>  m_Count = 0;
+		mutable std::mutex m_Lock;
+	};
+
+	class MUtilityBitwiseIDBank
+	{
+	public:
+		MUtilityBitwiseID GetID();
+		bool ReturnID(MUtilityBitwiseID idToReturn);
+
+		bool IsIDActive(MUtilityBitwiseID id) const;
+		bool IsIDRecycled(MUtilityBitwiseID id) const;
+
+		uint32_t GetCount() const;
+
+	private:
+		std::atomic<MUtilityBitwiseID>	m_NextID = 1;
+		std::atomic<MUtilityBitwiseID>	m_RecycledIDs = 0;
+		std::atomic<uint32_t>			m_Count = 0;
+	};
+}

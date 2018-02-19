@@ -3,6 +3,7 @@
 
 #define MUTILITY_LOG_CATEGORY_IDBANK "IDBank"
 
+using namespace MUtility;
 using MUtility::BitSet;
 
 // ---------- MUtilityIDBank ----------
@@ -13,13 +14,14 @@ MUtilityID MUtilityIDBank::GetID()
 	m_Lock.lock();
 	if (m_RecycledIDs.size() > 0)
 	{
-		toReturn = m_RecycledIDs.back();
-		m_RecycledIDs.pop_back();
+		toReturn = m_RecycledIDs.front();
+		m_RecycledIDs.pop_front();
 	}
 	else
 	{
 		toReturn = m_NextID++;
 	}
+	++m_Count;
 	m_Lock.unlock();
 
 	return toReturn;
@@ -48,12 +50,13 @@ bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
 #endif
 
 	m_RecycledIDs.push_back(idToreturn);
+	--m_Count;
 
 	m_Lock.unlock();
 	return true;
 }
 
-bool MUtilityIDBank::IsIDActive(MUtilityID id)
+bool MUtilityIDBank::IsIDActive(MUtilityID id) const
 {
 	if (id < 0)
 		return false;
@@ -67,14 +70,25 @@ bool MUtilityIDBank::IsIDActive(MUtilityID id)
 	return result;
 }
 
-bool MUtilityIDBank::IsIDRecycled(MUtilityID id)
+bool MUtilityIDBank::IsIDRecycled(MUtilityID id) const
 {
+	bool result = false;
+	m_Lock.lock();
 	for (int i = 0; i < m_RecycledIDs.size(); ++i)
 	{
 		if (m_RecycledIDs[i] == id)
-			return true;
+		{
+			result = true;
+			break;
+		}
 	}
-	return false;
+	m_Lock.unlock();
+	return result;
+}
+
+uint32_t MUtilityIDBank::GetCount() const
+{
+	return m_Count;
 }
 
 // ---------- MUtilityBitwiseIDBank ----------
@@ -98,6 +112,7 @@ MUtilityBitwiseID MUtilityBitwiseIDBank::MUtilityBitwiseIDBank::GetID()
 		m_RecycledIDs &= ~toReturn;
 	}
 
+	++m_Count;
 	return toReturn;
 }
 
@@ -124,11 +139,12 @@ bool MUtilityBitwiseIDBank::ReturnID(MUtilityBitwiseID idToReturn)
 		return false;
 	}
 
+	--m_Count;
 	m_RecycledIDs |= idToReturn;
 	return true;
 }
 
-bool MUtilityBitwiseIDBank::IsIDActive(MUtilityBitwiseID id)
+bool MUtilityBitwiseIDBank::IsIDActive(MUtilityBitwiseID id) const
 {
 	if (id == MUtility::EMPTY_BITSET)
 		return false;
@@ -136,7 +152,12 @@ bool MUtilityBitwiseIDBank::IsIDActive(MUtilityBitwiseID id)
 	return !IsIDRecycled(id) && id < m_NextID;
 }
 
-bool MUtilityBitwiseIDBank::IsIDRecycled(MUtilityBitwiseID id)
+bool MUtilityBitwiseIDBank::IsIDRecycled(MUtilityBitwiseID id) const
 {
 	return (id & m_RecycledIDs) != 0;
+}
+
+uint32_t MUtilityBitwiseIDBank::GetCount() const
+{
+	return m_Count;
 }
