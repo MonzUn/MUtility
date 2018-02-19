@@ -22,7 +22,7 @@ namespace MUtility
 		uint32_t GetCount() const;
 
 	private:
-		MUtilityID m_NextID = 0;
+		std::atomic<MUtilityID> m_NextID = 0;
 		std::deque<MUtilityID> m_RecycledIDs;
 		std::atomic<uint32_t>  m_Count = 0;
 		mutable std::mutex m_Lock;

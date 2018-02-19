@@ -32,11 +32,9 @@ bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
 	if (idToreturn < 0)
 		return false;
 
-	m_Lock.lock();
 	if (idToreturn >= m_NextID)
 	{
 		MLOG_WARNING("Attempted to return an ID that has not yet been assigned; ID = " << idToreturn, MUTILITY_LOG_CATEGORY_IDBANK);
-		m_Lock.unlock();
 		return false;
 	}
 
@@ -44,15 +42,15 @@ bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
 	if (IsIDRecycled(idToreturn))
 	{
 		MLOG_WARNING("Attempted to return an already returned ID; ID = " << idToreturn, MUTILITY_LOG_CATEGORY_IDBANK);
-		m_Lock.unlock();
 		return false;
 	}
 #endif
 
+	m_Lock.lock();
 	m_RecycledIDs.push_back(idToreturn);
+	m_Lock.unlock();
 	--m_Count;
 
-	m_Lock.unlock();
 	return true;
 }
 
@@ -62,11 +60,9 @@ bool MUtilityIDBank::IsIDActive(MUtilityID id) const
 		return false;
 
 	bool result = false;
-	m_Lock.lock();
 	if (id < m_NextID && !IsIDRecycled(id))
 		result = true;
 
-	m_Lock.unlock();
 	return result;
 }
 
