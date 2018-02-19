@@ -1,5 +1,6 @@
 #pragma once
 #include "MUtilityMacros.h"
+#include "MUtilityPlatformDefinitions.h"
 #include <cstdint>
 #include <string>
 #include <sstream>
@@ -7,7 +8,7 @@
 
 #ifndef MUTILITY_DISABLE_LOGGING
 
-	#ifdef _DEBUG
+	#if COMPILE_MODE == COMPILE_MODE_DEBUG
 
 		#define MLOG_ERROR(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_ERROR, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
 		#define MLOG_WARNING(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_WARNING, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())

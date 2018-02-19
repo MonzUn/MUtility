@@ -38,7 +38,7 @@ bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
 		return false;
 	}
 
-#ifdef _DEBUG
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
 	if (IsIDRecycled(idToreturn))
 	{
 		MLOG_WARNING("Attempted to return an already returned ID; ID = " << idToreturn, MUTILITY_LOG_CATEGORY_IDBANK);

@@ -5,6 +5,10 @@
 
 #define COMPILER_MSVC		1
 
+#define COMPILE_MODE_DEBUG		1
+#define COMPILE_MODE_RELEASE	2
+
+// OS
 #if defined _WIN32
 	#define PLATFORM PLATFORM_WINDOWS
 #elif defined __APPLE__
@@ -13,12 +17,20 @@
 	#define PLATFORM PLATFORM_LINUX
 #endif
 
+// Compiler
 #if defined _MSC_VER
 	#define COMPILER COMPILER_MSVC
 #endif
 
-#if PLATFORM == PLATFORM_WINDOWS
+// Mode
 #ifdef _DEBUG
-#define WINDOWS_DEBUG
+	#define COMPILE_MODE COMPILE_MODE_DEBUG
+#else
+	#define COMPILE_MODE COMPILE_MODE_RELEASE
 #endif
+
+#if PLATFORM == PLATFORM_WINDOWS && COMPILER == COMPILER_MSVC
+	#if COMPILE_MODE == COMPILE_MODE_DEBUG
+		#define WINDOWS_DEBUG
+	#endif
 #endif
