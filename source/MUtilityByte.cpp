@@ -28,12 +28,7 @@ int32_t MUtility::GetLowestSetBitIndex(const BitSet& bitset)
 	if (bitset == EMPTY_BITSET)
 		return EMPTY_BITSET;
 
-	for (int32_t i = 0; i < static_cast<int32_t>(BitSizeof(bitset) - 1); ++i)
-	{
-		if ((bitset & (static_cast<BitSet>(1) << i)) != 0)
-			return i;
-	}
-	return EMPTY_BITSET;
+	return BitscanForward(bitset);
 }
 
 int32_t MUtility::GetHighestSetBitIndex(const BitSet& bitset)
@@ -41,12 +36,7 @@ int32_t MUtility::GetHighestSetBitIndex(const BitSet& bitset)
 	if (bitset == EMPTY_BITSET)
 		return EMPTY_BITSET;
 
-	for (int32_t i = static_cast<int32_t>(BitSizeof(bitset) - 1); i > 0; --i)
-	{
-		if ((bitset & (static_cast<BitSet>(1) << i)) != 0)
-			return i;
-	}
-	return EMPTY_BITSET;
+	return BitscanReverse(bitset);
 }
 
 void MUtility::BitSetToString(const BitSet& bitset, char* buffer, int32_t bufferSize)
