@@ -30,22 +30,22 @@ namespace MUtility
 		mutable std::mutex m_Lock;
 	};
 
-	class MUtilityBitwiseIDBank
+	class MUtilityBitMaskIDBank
 	{
 	public:
-		MUtilityBitwiseID GetID();
-		bool ReturnID(MUtilityBitwiseID idToReturn);
+		MUtilityBitMaskID GetID();
+		bool ReturnID(MUtilityBitMaskID idToReturn);
 
-		MUtilityBitwiseID PeekNextID() const;
+		MUtilityBitMaskID PeekNextID() const;
 
-		bool IsIDActive(MUtilityBitwiseID id) const;
-		bool IsIDRecycled(MUtilityBitwiseID id) const;
+		bool IsIDActive(MUtilityBitMaskID id) const;
+		bool IsIDRecycled(MUtilityBitMaskID id) const;
 
 		uint32_t GetCount() const;
 
 	private:
-		std::atomic<MUtilityBitwiseID>	m_NextID = 1;
-		std::atomic<MUtilityBitwiseID>	m_RecycledIDs = 0;
+		std::atomic<MUtilityBitMaskID>	m_NextID = 1;
+		std::atomic<MUtilityBitMaskID>	m_RecycledIDs = 0;
 		std::atomic<uint32_t>			m_Count = 0;
 	};
 }

@@ -94,9 +94,9 @@ uint32_t MUtilityIDBank::GetCount() const
 
 // ---------- MUtilityBitwiseIDBank ----------
 
-MUtilityBitwiseID MUtilityBitwiseIDBank::MUtilityBitwiseIDBank::GetID()
+MUtilityBitMaskID MUtilityBitMaskIDBank::GetID()
 {
-	MUtilityBitwiseID toReturn = 0;
+	MUtilityBitMaskID toReturn = 0;
 	if (m_RecycledIDs == 0)
 	{
 		if (1 << m_NextID != 0)
@@ -117,7 +117,7 @@ MUtilityBitwiseID MUtilityBitwiseIDBank::MUtilityBitwiseIDBank::GetID()
 	return toReturn;
 }
 
-bool MUtilityBitwiseIDBank::ReturnID(MUtilityBitwiseID idToReturn)
+bool MUtilityBitMaskIDBank::ReturnID(MUtilityBitMaskID idToReturn)
 {
 	if (idToReturn == MUtility::EMPTY_BITSET)
 		MLOG_WARNING("Attempted to return empty bitset", MUTILITY_LOG_CATEGORY_IDBANK);
@@ -145,12 +145,12 @@ bool MUtilityBitwiseIDBank::ReturnID(MUtilityBitwiseID idToReturn)
 	return true;
 }
 
-MUtilityBitwiseID MUtilityBitwiseIDBank::PeekNextID() const
+MUtilityBitMaskID MUtilityBitMaskIDBank::PeekNextID() const
 {
 	return m_NextID;
 }
 
-bool MUtilityBitwiseIDBank::IsIDActive(MUtilityBitwiseID id) const
+bool MUtilityBitMaskIDBank::IsIDActive(MUtilityBitMaskID id) const
 {
 	if (id == MUtility::EMPTY_BITSET)
 		return false;
@@ -158,12 +158,12 @@ bool MUtilityBitwiseIDBank::IsIDActive(MUtilityBitwiseID id) const
 	return !IsIDRecycled(id) && id < m_NextID;
 }
 
-bool MUtilityBitwiseIDBank::IsIDRecycled(MUtilityBitwiseID id) const
+bool MUtilityBitMaskIDBank::IsIDRecycled(MUtilityBitMaskID id) const
 {
 	return (id & m_RecycledIDs) != 0;
 }
 
-uint32_t MUtilityBitwiseIDBank::GetCount() const
+uint32_t MUtilityBitMaskIDBank::GetCount() const
 {
 	return m_Count;
 }
