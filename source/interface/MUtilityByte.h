@@ -1,6 +1,7 @@
 #pragma once
 #include "MUtilityPlatformDefinitions.h"
 #include <limits.h>
+#include <string>
 #include <stdint.h>
 
 #if PLATFORM == PLATFORM_WINDOWS && COMPILER == COMPILER_MSVC
@@ -50,4 +51,5 @@ namespace MUtility
 	int32_t	GetLowestSetBitIndex(const BitSet& bitset);
 	int32_t	GetHighestSetBitIndex(const BitSet& bitset);
 	void	BitSetToString(const BitSet& bitset, char* buffer, int32_t bufferSize);
+	std::string BitSetToString(const BitSet& bitset);
 }

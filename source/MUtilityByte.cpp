@@ -50,3 +50,14 @@ void MUtility::BitSetToString(const BitSet& bitset, char* buffer, int32_t buffer
 		buffer[i] = (((bitset & (static_cast<BitSet>(1) << (BITSET_SIZE_BITS - i))) != 0) ? '1' : '0');
 	}
 }
+
+std::string MUtility::BitSetToString(const BitSet& bitset)
+{
+	std::string toReturn = "";
+	toReturn.reserve(BITSET_SIZE_BITS);
+	for (int i = BITSET_SIZE_BITS - 1; i >= 0; --i)
+	{
+		toReturn[i] = (((bitset & (static_cast<BitSet>(1) << (BITSET_SIZE_BITS - i))) != 0) ? '1' : '0');
+	}
+	return toReturn;
+}
