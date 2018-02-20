@@ -33,19 +33,19 @@ namespace MUtility
 	class MUtilityBitMaskIDBank
 	{
 	public:
-		MUtilityBitMaskID GetID();
-		bool ReturnID(MUtilityBitMaskID idToReturn);
+		MUtilityBitmaskID GetID();
+		bool ReturnID(MUtilityBitmaskID idToReturn);
 
-		MUtilityBitMaskID PeekNextID() const;
+		MUtilityBitmaskID PeekNextID() const;
 
-		bool IsIDActive(MUtilityBitMaskID id) const;
-		bool IsIDRecycled(MUtilityBitMaskID id) const;
+		bool IsIDActive(MUtilityBitmaskID id) const;
+		bool IsIDRecycled(MUtilityBitmaskID id) const;
 
 		uint32_t GetCount() const;
 
 	private:
-		std::atomic<MUtilityBitMaskID>	m_NextID = 1;
-		std::atomic<MUtilityBitMaskID>	m_RecycledIDs = 0;
+		std::atomic<MUtilityBitmaskID>	m_NextID = 1;
+		std::atomic<MUtilityBitmaskID>	m_RecycledIDs = 0;
 		std::atomic<uint32_t>			m_Count = 0;
 	};
 }

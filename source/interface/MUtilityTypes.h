@@ -6,4 +6,4 @@
 #define MUTILITY_INVALID_BITMASK_ID MUtility::EMPTY_BITSET
 
 typedef int32_t MUtilityID;
-typedef uint64_t MUtilityBitMaskID;
+typedef uint64_t MUtilityBitmaskID;
