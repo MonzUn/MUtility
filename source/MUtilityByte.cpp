@@ -2,15 +2,9 @@
 
 using MUtility::BitSet;
 
-int32_t MUtility::GetSetBitCount(const BitSet& bitset)
+uint64_t MUtility::GetSetBitCount(const BitSet& bitset)
 {
-	int32_t counter = 0;
-	for (int32_t i = 0; i < static_cast<int32_t>(BitSizeof(bitset)); ++i)
-	{
-		if ((bitset & (static_cast<BitSet>(1) << i)) != 0)
-			counter++;
-	}
-	return counter;
+	return PopCount(bitset);
 }
 
 BitSet MUtility::GetLowestSetBit(const BitSet& bitset)
@@ -37,6 +31,11 @@ int32_t MUtility::GetHighestSetBitIndex(const BitSet& bitset)
 		return EMPTY_BITSET;
 
 	return BitscanReverse(bitset);
+}
+
+bool MUtility::IsBitSet(const BitSet& bitset, uint32_t indexToTest)
+{
+	return TestBit(bitset, indexToTest);
 }
 
 void MUtility::BitSetToString(const BitSet& bitset, char* buffer, int32_t bufferSize)
