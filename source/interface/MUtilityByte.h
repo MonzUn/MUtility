@@ -30,6 +30,8 @@ namespace MUtility
 		unsigned long toReturn = 0;
 		#if PLATFORM == PLATFORM_WINDOWS && COMPILER == COMPILER_MSVC
 			_BitScanForward64(&toReturn, toScan);
+		#else
+			static_assert(false, "Function is not supported on this platform or compiler");
 		#endif
 		return toReturn;
 	}
@@ -40,6 +42,8 @@ namespace MUtility
 		unsigned long toReturn = 0;
 		#if PLATFORM == PLATFORM_WINDOWS && COMPILER == COMPILER_MSVC
 			_BitScanReverse64(&toReturn, toScan);
+		#else	
+			static_assert(false, "Function is not supported on this platform or compiler");
 		#endif
 		return toReturn;
 	}
