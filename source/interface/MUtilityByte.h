@@ -25,7 +25,7 @@ namespace MUtility
 	}
 
 	template<typename T>
-	uint32_t BitscanForward(const T& toScan)
+	inline uint32_t BitscanForward(const T& toScan)
 	{
 		unsigned long toReturn = 0;
 		#if PLATFORM == PLATFORM_WINDOWS && COMPILER == COMPILER_MSVC
@@ -37,7 +37,7 @@ namespace MUtility
 	}
 
 	template<typename T>
-	uint32_t BitscanReverse(const T& toScan)
+	inline uint32_t BitscanReverse(const T& toScan)
 	{
 		unsigned long toReturn = 0;
 		#if PLATFORM == PLATFORM_WINDOWS && COMPILER == COMPILER_MSVC
