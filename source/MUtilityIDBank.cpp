@@ -92,7 +92,7 @@ uint32_t MUtilityIDBank::GetCount() const
 	return m_Count;
 }
 
-// ---------- MUtilityBitwiseIDBank ----------
+// ---------- MUtilityBitMaskIDBank ----------
 
 MUtilityBitmaskID MUtilityBitMaskIDBank::GetID()
 {
