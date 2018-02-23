@@ -1,5 +1,5 @@
 #include "interface/MUtilityMath.h"
-#include "interface/MUtilityByte.h"
+#include "interface/MUtilityIntrinsics.h"
 
 uint32_t MUtilityMath::FastLog2(uint64_t value)
 {
