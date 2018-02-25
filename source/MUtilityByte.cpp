@@ -21,7 +21,7 @@ BitSet MUtility::GetHighestSetBit(const BitSet& bitset)
 int32_t MUtility::GetLowestSetBitIndex(const BitSet& bitset)
 {
 	if (bitset == EMPTY_BITSET)
-		return EMPTY_BITSET;
+		return -1;
 
 	return BitscanForward(bitset);
 }
@@ -29,7 +29,7 @@ int32_t MUtility::GetLowestSetBitIndex(const BitSet& bitset)
 int32_t MUtility::GetHighestSetBitIndex(const BitSet& bitset)
 {
 	if (bitset == EMPTY_BITSET)
-		return EMPTY_BITSET;
+		return -1;
 
 	return BitscanReverse(bitset);
 }
