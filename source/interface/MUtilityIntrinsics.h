@@ -51,7 +51,7 @@ namespace MUtility
 	template<typename T>
 	inline int32_t BitscanReverse(const T& toScan)
 	{
-		#if PLATFORM != PLATFORM_WINDOWS && COMPILER == COMPILER_MSVC
+		#if PLATFORM == PLATFORM_WINDOWS && COMPILER == COMPILER_MSVC
 			unsigned long toReturn = 0;
 			_BitScanReverse64(&toReturn, toScan);
 			return toReturn;
