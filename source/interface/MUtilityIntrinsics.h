@@ -56,7 +56,7 @@ namespace MUtility
 			_BitScanReverse64(&toReturn, toScan);
 			return toReturn;
 		#else	
-			for (int32_t i = static_cast<int32_t>(BitSizeof(toScan) - 1); i > 0; --i)
+			for (int32_t i = static_cast<int32_t>(BitSizeof(toScan) - 1); i >= 0; --i)
 			{
 				if ((toScan & (1ULL << i)) != 0)
 					return i;
