@@ -57,7 +57,7 @@ std::string MUtility::BitSetToString(const BitSet& bitset)
 	toReturn.reserve(BITSET_SIZE_BITS);
 	for (int i = BITSET_SIZE_BITS - 1; i >= 0; --i)
 	{
-		toReturn[i] = (((bitset & (static_cast<BitSet>(1) << (BITSET_SIZE_BITS - i))) != 0) ? '1' : '0');
+		toReturn.push_back(((bitset & (static_cast<BitSet>(1) << i)) != 0) ? '1' : '0');
 	}
 	return toReturn;
 }
