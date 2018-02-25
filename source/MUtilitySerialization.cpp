@@ -119,7 +119,7 @@ void MUtilitySerialization::ReadBool( bool& value, const Byte*& source )
 	CopyAndIncrementSource( &value, source, BOOL_SIZE );
 }
 
-void MUtilitySerialization::ReadString( std::string&	value, const Byte*& source ) // TODODB: Optimize this one~ (Try to avoid unnecessary memory allocation)
+void MUtilitySerialization::ReadString( std::string& value, const Byte*& source ) // TODODB: Optimize this one~ (Try to avoid unnecessary memory allocation)
 {
 	uint32_t stringLength;
 	CopyAndIncrementSource( &stringLength, source, INT_32_SIZE );
