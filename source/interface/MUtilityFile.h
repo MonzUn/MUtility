@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace MUtilityFile
+namespace MUtility
 {
 	bool CreateDir(const char* directoryPath); // Cannot be named "CreateDirectory" due to conflict with windows.h
 

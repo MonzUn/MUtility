@@ -7,7 +7,7 @@
 
 #define LOG_CATEGORY_FILE "MUtilityFile"
 
-bool MUtilityFile::CreateDir(const char* directoryPath)
+bool MUtility::CreateDir(const char* directoryPath)
 {
 	int result;
 	
@@ -37,7 +37,7 @@ bool MUtilityFile::CreateDir(const char* directoryPath)
 	return result == 0;
 }
 
-bool MUtilityFile::DirectoryExists(const char* folderPath)
+bool MUtility::DirectoryExists(const char* folderPath)
 {
 	bool toReturn = false;
 	struct stat info;
@@ -53,7 +53,7 @@ bool MUtilityFile::DirectoryExists(const char* folderPath)
 	return toReturn;
 }
 
-bool MUtilityFile::FileExists(const char* filePath)
+bool MUtility::FileExists(const char* filePath)
 {
 	bool toReturn = false;
 	std::ifstream file(filePath);
@@ -66,7 +66,7 @@ bool MUtilityFile::FileExists(const char* filePath)
 	return toReturn;
 }
 
-std::string MUtilityFile::GetDirectoryPathFromFilePath(const std::string& filePath)
+std::string MUtility::GetDirectoryPathFromFilePath(const std::string& filePath)
 {
 	std::string toReturn = "";
 	const size_t last_slash_idx = filePath.find_last_of("\\/");
@@ -77,7 +77,7 @@ std::string MUtilityFile::GetDirectoryPathFromFilePath(const std::string& filePa
 	return toReturn;
 }
 
-std::string	MUtilityFile::GetFileContentAsString(const std::string& filePath)
+std::string	MUtility::GetFileContentAsString(const std::string& filePath)
 {
 	std::string toReturn = "";
 	std::ifstream file = std::ifstream(filePath, std::ios_base::in | std::ios_base::binary);
@@ -103,7 +103,7 @@ std::string	MUtilityFile::GetFileContentAsString(const std::string& filePath)
 	return toReturn;
 }
 
-uint64_t MUtilityFile::GetFileContentSize(const std::string& filePath)
+uint64_t MUtility::GetFileContentSize(const std::string& filePath)
 {
 	uint64_t toReturn = 0;
 	std::ifstream file = std::ifstream(filePath, std::ios_base::binary | std::ios_base::ate);

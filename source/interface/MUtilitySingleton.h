@@ -1,30 +1,32 @@
 #pragma once
-
-template<class T>
-class MUtilitySingleton
+namespace MUtility
 {
-public:
-	static T*& GetInstance()
+	template<class T>
+	class Singleton
 	{
-		static T* instance = nullptr;
+	public:
+		static T*& GetInstance()
+		{
+			static T* instance = nullptr;
 
-		if (instance == nullptr)
-			instance = new T();
+			if (instance == nullptr)
+				instance = new T();
 
-		return instance;
-	}
+			return instance;
+		}
 
-	static void Destroy()
-	{
-		T*& instance = GetInstance();
-		delete instance;
-		instance = nullptr;
-	}
+		static void Destroy()
+		{
+			T*& instance = GetInstance();
+			delete instance;
+			instance = nullptr;
+		}
 
-	MUtilitySingleton() {};
-	virtual ~MUtilitySingleton() {}
+		Singleton() {};
+		virtual ~Singleton() {}
 
-private:
-	MUtilitySingleton(const MUtilitySingleton&) = delete;
-	MUtilitySingleton& operator=(const MUtilitySingleton&) = delete;
-};
+	private:
+		Singleton(const Singleton&) = delete;
+		Singleton& operator=(const Singleton&) = delete;
+	};
+}
