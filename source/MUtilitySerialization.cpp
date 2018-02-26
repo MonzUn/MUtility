@@ -124,10 +124,10 @@ void MUtilitySerialization::ReadString( std::string& value, const Byte*& source 
 	uint32_t stringLength;
 	CopyAndIncrementSource( &stringLength, source, INT_32_SIZE );
 
-	char* buffer = static_cast<char*>( malloc( stringLength + 1 ) ); // +1 for the null terminator //TODODB: See if we really need to place this null terminator or if it will be placed there by the std::string ctor
+	char* buffer = new char[stringLength + 1]; // +1 for the null terminator //TODODB: See if we really need to place this null terminator or if it will be placed there by the std::string ctor
 	CopyAndIncrementSource( buffer, source, stringLength );
 	buffer[stringLength] = '\0';
 
 	value = std::string( buffer );
-	delete buffer;
+	delete[] buffer;
 }
