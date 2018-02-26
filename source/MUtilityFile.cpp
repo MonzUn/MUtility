@@ -5,7 +5,7 @@
 #include <direct.h>
 #include <fstream>
 
-#define MUTILITY_LOG_CATEGORY_FILE "MUtilityFile"
+#define LOG_CATEGORY_FILE "MUtilityFile"
 
 bool MUtilityFile::CreateDir(const char* directoryPath)
 {
@@ -24,11 +24,11 @@ bool MUtilityFile::CreateDir(const char* directoryPath)
 			return true;
 
 		case ENOENT:
-			MLOG_WARNING("Unable to create diretory on path \"" << directoryPath << "\" since the path is invalid", MUTILITY_LOG_CATEGORY_FILE);
+			MLOG_WARNING("Unable to create diretory on path \"" << directoryPath << "\" since the path is invalid", LOG_CATEGORY_FILE);
 			return false;
 
 		default:
-			MLOG_WARNING("Unable to create directory at path \"" << directoryPath << "\" - Unknown error", MUTILITY_LOG_CATEGORY_FILE);
+			MLOG_WARNING("Unable to create directory at path \"" << directoryPath << "\" - Unknown error", LOG_CATEGORY_FILE);
 			return false;
 			break;
 		}
@@ -43,7 +43,7 @@ bool MUtilityFile::DirectoryExists(const char* folderPath)
 	struct stat info;
 	if (stat(folderPath, &info) != 0)
 	{
-		MLOG_WARNING("Failed to access path \"" << folderPath << "\"", MUTILITY_LOG_CATEGORY_FILE);
+		MLOG_WARNING("Failed to access path \"" << folderPath << "\"", LOG_CATEGORY_FILE);
 		return false;
 	}
 
@@ -98,7 +98,7 @@ std::string	MUtilityFile::GetFileContentAsString(const std::string& filePath)
 		}
 	}
 	else
-		MLOG_WARNING("Failed to find file; Path = " << filePath, MUTILITY_LOG_CATEGORY_FILE);
+		MLOG_WARNING("Failed to find file; Path = " << filePath, LOG_CATEGORY_FILE);
 
 	return toReturn;
 }
@@ -113,7 +113,7 @@ uint64_t MUtilityFile::GetFileContentSize(const std::string& filePath)
 		file.close();
 	}
 	else
-		MLOG_WARNING("Failed to find file; Path = " << filePath, MUTILITY_LOG_CATEGORY_FILE);
+		MLOG_WARNING("Failed to find file; Path = " << filePath, LOG_CATEGORY_FILE);
 
 	return toReturn;
 }

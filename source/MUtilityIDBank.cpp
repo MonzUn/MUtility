@@ -1,7 +1,7 @@
 #include "interface/MUtilityIDBank.h"
 #include "interface/MUtilityMath.h"
 
-#define MUTILITY_LOG_CATEGORY_IDBANK "IDBank"
+#define LOG_CATEGORY_IDBANK "IDBank"
 
 using namespace MUtility;
 using MUtility::BitSet;
@@ -34,14 +34,14 @@ bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
 
 	if (idToreturn >= m_NextID)
 	{
-		MLOG_WARNING("Attempted to return an ID that has not yet been assigned; ID = " << idToreturn, MUTILITY_LOG_CATEGORY_IDBANK);
+		MLOG_WARNING("Attempted to return an ID that has not yet been assigned; ID = " << idToreturn, LOG_CATEGORY_IDBANK);
 		return false;
 	}
 
 #if COMPILE_MODE == COMPILE_MODE_DEBUG
 	if (IsIDRecycled(idToreturn))
 	{
-		MLOG_WARNING("Attempted to return an already returned ID; ID = " << idToreturn, MUTILITY_LOG_CATEGORY_IDBANK);
+		MLOG_WARNING("Attempted to return an already returned ID; ID = " << idToreturn, LOG_CATEGORY_IDBANK);
 		return false;
 	}
 #endif
@@ -105,7 +105,7 @@ MUtilityBitmaskID MUtilityBitMaskIDBank::GetID()
 			m_NextID = static_cast<BitSet>(1) << (MUtilityMath::FastLog2(m_NextID) + 1);
 		}
 		else
-			MLOG_WARNING("Attempted to get next ID but the underlying type has run out of bits; Bitcount of underlying type = " << MUtility::BitSizeof(m_NextID), MUTILITY_LOG_CATEGORY_IDBANK);
+			MLOG_WARNING("Attempted to get next ID but the underlying type has run out of bits; Bitcount of underlying type = " << MUtility::BitSizeof(m_NextID), LOG_CATEGORY_IDBANK);
 	}
 	else
 	{
@@ -120,13 +120,13 @@ MUtilityBitmaskID MUtilityBitMaskIDBank::GetID()
 bool MUtilityBitMaskIDBank::ReturnID(MUtilityBitmaskID idToReturn)
 {
 	if (idToReturn == MUtility::EMPTY_BITSET)
-		MLOG_WARNING("Attempted to return empty bitset", MUTILITY_LOG_CATEGORY_IDBANK);
+		MLOG_WARNING("Attempted to return empty bitset", LOG_CATEGORY_IDBANK);
 
 	if (MUtility::GetSetBitCount(idToReturn) > 1)
 	{
 		char* bitsetString = new char[MUtility::BITSET_SIZE_BITS + 1];
 		MUtility::BitSetToString(idToReturn, bitsetString, MUtility::BITSET_SIZE_BITS + 1);
-		MLOG_WARNING("Attempted to return multiple IDs in one call; only one ID can be returned per call; ID = " << bitsetString, MUTILITY_LOG_CATEGORY_IDBANK);
+		MLOG_WARNING("Attempted to return multiple IDs in one call; only one ID can be returned per call; ID = " << bitsetString, LOG_CATEGORY_IDBANK);
 		delete[] bitsetString;
 		return false;
 	}
@@ -135,7 +135,7 @@ bool MUtilityBitMaskIDBank::ReturnID(MUtilityBitmaskID idToReturn)
 	{
 		char* bitsetString = new char[MUtility::BITSET_SIZE_BITS + 1];
 		MUtility::BitSetToString(idToReturn, bitsetString, MUtility::BITSET_SIZE_BITS + 1);
-		MLOG_WARNING("Attempted to return an ID that has not yet been assigned; ID = " << bitsetString, MUTILITY_LOG_CATEGORY_IDBANK);
+		MLOG_WARNING("Attempted to return an ID that has not yet been assigned; ID = " << bitsetString, LOG_CATEGORY_IDBANK);
 		delete[] bitsetString;
 		return false;
 	}

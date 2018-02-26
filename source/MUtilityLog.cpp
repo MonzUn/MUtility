@@ -5,7 +5,7 @@
 #include <mutex>
 #include <sstream>
 
-#define MUTILITY_LOG_CATEGORY_LOG "MUtilityLog"
+#define LOG_CATEGORY_LOG "MUtilityLog"
 
 namespace MUtilityLog
 {
@@ -82,7 +82,7 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 		break;
 
 	default:
-		MLOG_WARNING("Invalid loglevel supplied; call ignored", MUTILITY_LOG_CATEGORY_LOG);
+		MLOG_WARNING("Invalid loglevel supplied; call ignored", LOG_CATEGORY_LOG);
 		m_LogLock.unlock();
 		return;
 	}
@@ -96,7 +96,7 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 		localStream << "Category: " << category << '\n' << "File: " << file << '\n' << "Line: " << line << '\n' << "Function: " << functionName << "\n - " << message << "\n\n";
 		break;
 	default:
-		MLOG_WARNING("Invalid logMode supplied; call ignored", MUTILITY_LOG_CATEGORY_LOG);
+		MLOG_WARNING("Invalid logMode supplied; call ignored", LOG_CATEGORY_LOG);
 		m_LogLock.unlock();
 		return;
 	}
@@ -196,7 +196,7 @@ std::string MUtilityLog::GetLog(const std::string& category)
 	{
 		toReturn = iterator->second.Log.str();
 	}
-	MLOG_WARNING("Attempted to get log for category \"" << category << "\" but no such category exists", MUTILITY_LOG_CATEGORY_LOG);
+	MLOG_WARNING("Attempted to get log for category \"" << category << "\" but no such category exists", LOG_CATEGORY_LOG);
 
 	m_LogLock.unlock();
 	return toReturn;
@@ -224,7 +224,7 @@ LogMapIterator MUtilityLog::RegisterCategory(const char* categoryName, MUtilityL
 {
 	if (m_Logs->find(categoryName) != m_Logs->end())
 	{
-		MLOG_WARNING("Attempted to register logger category \"" << std::string(categoryName) + "\" multiple times; call ignored", MUTILITY_LOG_CATEGORY_LOG);
+		MLOG_WARNING("Attempted to register logger category \"" << std::string(categoryName) + "\" multiple times; call ignored", LOG_CATEGORY_LOG);
 		return m_Logs->end();
 	}
 

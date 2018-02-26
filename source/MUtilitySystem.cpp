@@ -12,7 +12,7 @@
 #include <unistd.h>
 #endif
 
-#define MUTILITY_LOG_CATEGORY_SYSTEM "MUtilitySystem"
+#define LOG_CATEGORY_SYSTEM "MUtilitySystem"
 
 constexpr uint32_t EXECUTABLE_PATH_MAX_LENGTH = 10000;
 
@@ -44,7 +44,7 @@ std::string MUtility::GetExecutableDirectoryPath() // TODODB: Implement support 
 void MUtility::UnblockSTDIn()
 {
 #if PLATFORM != PLATFORM_WINDOWS
-	MLOG_WARNING("Function called on non supported system", MUTILITY_LOG_CATEGORY_SYSTEM);
+	MLOG_WARNING("Function called on non supported system", LOG_CATEGORY_SYSTEM);
 	return;
 #else
 	INPUT_RECORD inputRecord[2];
