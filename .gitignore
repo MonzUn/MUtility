@@ -17,4 +17,5 @@ project/x64
 
 # Generated
 output/
-TODO.txt
+local/*
+!local/Dummy.txt

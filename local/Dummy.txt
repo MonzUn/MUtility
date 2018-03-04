@@ -1,0 +1,2 @@
+This file is just here so that the folder can be synced to git :)
+The gitignore is set up to ignore everything in this folder except this file.
