@@ -1,5 +1,5 @@
-#include "interface/MUtilitySystem.h"
-#include "interface/MUtilityLog.h"
+#include "Interface/MUtilitySystem.h"
+#include "Interface/MUtilityLog.h"
 #include <algorithm>
 
 #if PLATFORM == PLATFORM_WINDOWS

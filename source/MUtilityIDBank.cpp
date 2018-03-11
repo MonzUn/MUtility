@@ -1,5 +1,5 @@
-#include "interface/MUtilityIDBank.h"
-#include "interface/MUtilityMath.h"
+#include "Interface/MUtilityIDBank.h"
+#include "Interface/MUtilityMath.h"
 
 #define LOG_CATEGORY_IDBANK "IDBank"
 
@@ -54,7 +54,7 @@ bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
 	return true;
 }
 
-MUtilityID MUtilityIDBank::PeekNextID() const
+MUtilityID MUtilityIDBank::PeekNextID() const // TODODB: Renamed this so it indicates that it's the next NEW ID and cannot be a recycled ID
 {
 	return m_NextID;
 }

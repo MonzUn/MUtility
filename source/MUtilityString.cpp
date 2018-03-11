@@ -1,4 +1,4 @@
-#include "interface/MUtilityString.h"
+#include "Interface/MUtilityString.h"
 #include <cctype>
 
 bool MUtilityString::IsStringNumber(const std::string& string)

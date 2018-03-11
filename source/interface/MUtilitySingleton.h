@@ -1,4 +1,5 @@
 #pragma once
+
 namespace MUtility
 {
 	template<class T>

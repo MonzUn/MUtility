@@ -1,7 +1,7 @@
-#include "interface/MUtilityFile.h"
-#include "interface/MUtilityLog.h"
-#include "interface/MUtilityPlatformDefinitions.h"
-#include "interface/MUtilityWindowsInclude.h"
+#include "Interface/MUtilityFile.h"
+#include "Interface/MUtilityLog.h"
+#include "Interface/MUtilityPlatformDefinitions.h"
+#include "Interface/MUtilityWindowsInclude.h"
 #include <direct.h>
 #include <fstream>
 

@@ -1,6 +1,6 @@
-#include "interface/MUtilityLog.h"
+#include "Interface/MUtilityLog.h"
 #include "MUtilityLogInternal.h"
-#include "interface/MUtilityFile.h"
+#include "Interface/MUtilityFile.h"
 #include <fstream>
 #include <mutex>
 #include <sstream>

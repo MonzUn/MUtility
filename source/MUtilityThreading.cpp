@@ -1,5 +1,5 @@
-#include "interface/MUtilityThreading.h"
-#include "interface/MUtilityLog.h"
+#include "Interface/MUtilityThreading.h"
+#include "Interface/MUtilityLog.h"
 
 #define LOG_CATEGORY_THREADING "MUtilityThreading"
 

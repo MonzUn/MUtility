@@ -1,5 +1,5 @@
-#include "interface/MUtilitySerialization.h"
-#include "interface/MUtilityDataSizes.h"
+#include "Interface/MUtilitySerialization.h"
+#include "Interface/MUtilityDataSizes.h"
 
 using namespace MUtility::DataSizes;
 using MUtility::Byte;
