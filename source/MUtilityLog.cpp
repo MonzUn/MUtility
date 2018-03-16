@@ -63,6 +63,9 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 
 	std::stringstream localStream;
 
+	if (!m_FullInterestLog->str().empty())
+		localStream << "\n\n";
+
 	switch (logLevel)
 	{
 	case MUtilityLogLevel::LOG_ERROR:
@@ -90,10 +93,10 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 	switch (logMode)
 	{
 	case MUtilityLogMode::Normal:
-		localStream << "Category: " << category << '\n' << message << "\n\n";
+		localStream << "Category: " << category << '\n' << message;
 		break;
 	case MUtilityLogMode::Debug:
-		localStream << "Category: " << category << '\n' << "File: " << file << '\n' << "Line: " << line << '\n' << "Function: " << functionName << "\n - " << message << "\n\n";
+		localStream << "Category: " << category << '\n' << "File: " << file << '\n' << "Line: " << line << '\n' << "Function: " << functionName << "\n - " << message;
 		break;
 	default:
 		MLOG_WARNING("Invalid logMode supplied; call ignored", LOG_CATEGORY_LOG);

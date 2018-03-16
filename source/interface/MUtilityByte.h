@@ -8,6 +8,8 @@
 #include <intrin.h>
 #endif
 
+// TODODB: Create bit flag type and operators so that enums can use this as underlying type and get operators automatically
+
 namespace MUtility
 {
 	typedef uint8_t Byte;
