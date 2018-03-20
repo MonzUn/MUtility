@@ -41,6 +41,16 @@ std::string MUtility::GetExecutableDirectoryPath() // TODODB: Implement support 
 		return returnPath;
 }
 
+void MUtility::OpenBrowserOnURL(const char* URL)
+{
+#if PLATFORM != PLATFORM_WINDOWS
+	MLOG_WARNING("Function called on non supported system", LOG_CATEGORY_SYSTEM);
+	return;
+#else
+	ShellExecute(0,0, URL, 0, 0, SW_SHOW);
+#endif
+}
+
 void MUtility::UnblockSTDIn()
 {
 #if PLATFORM != PLATFORM_WINDOWS

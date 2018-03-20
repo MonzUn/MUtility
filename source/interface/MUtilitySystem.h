@@ -7,5 +7,6 @@ namespace MUtility
 	int			GetPid();
 	std::string GetExecutableDirectoryPath();
 
+	void		OpenBrowserOnURL(const char* URL);
 	void		UnblockSTDIn();
 }
