@@ -39,18 +39,11 @@ bool MUtility::CreateDir(const char* directoryPath)
 
 bool MUtility::DirectoryExists(const char* folderPath)
 {
-	bool toReturn = false;
 	struct stat info;
 	if (stat(folderPath, &info) != 0)
-	{
-		MLOG_WARNING("Failed to access path \"" << folderPath << "\"", LOG_CATEGORY_FILE);
 		return false;
-	}
 
-	if (info.st_mode & S_IFDIR)
-		toReturn = true;
-	
-	return toReturn;
+	return ((info.st_mode & S_IFDIR) != 0);
 }
 
 bool MUtility::FileExists(const char* filePath)
