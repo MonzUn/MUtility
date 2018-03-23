@@ -1,6 +1,7 @@
 #include "Interface/MUtilityLog.h"
 #include "MUtilityLogInternal.h"
 #include "Interface/MUtilityFile.h"
+#include <atomic>
 #include <fstream>
 #include <mutex>
 #include <sstream>
@@ -18,22 +19,39 @@ namespace MUtilityLog
 
 	std::mutex m_LogLock;
 	int32_t m_MaxUnreadMessages = 100;
+
+	std::atomic<bool> m_Initialized = false;
 }
 
 // ---------- INTERFACE ----------
 
 void MUtilityLog::Initialize()
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (m_Initialized)
+	{
+		MLOG_WARNING("Attempted to initialize MutilityLog multiple times", LOG_CATEGORY_LOG);
+		return;
+	}
+#endif
+
 	m_Logs = new std::unordered_map<std::string, LogValuePair>();
 	m_UnreadMessages = new std::vector<std::string>();
 
 	m_InputStream = new std::stringstream();
 	m_MainLog = new std::stringstream();
 	m_FullInterestLog = new std::stringstream();
+	
+	m_Initialized = true;
 }
 
 void MUtilityLog::Shutdown()
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (!m_Initialized)
+		return;
+#endif
+
 	FlushToDisk();
 
 	delete m_Logs;
@@ -41,10 +59,17 @@ void MUtilityLog::Shutdown()
 	delete m_InputStream;
 	delete m_MainLog;
 	delete m_FullInterestLog;
+
+	m_Initialized = false;
 }
 
 void MUtilityLog::SetInterest(const std::string& category, MUtilityLogLevel::LogLevel newInterestLevels)
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if(!m_Initialized)
+		return;
+#endif
+
 	m_LogLock.lock();
 	LogMapIterator iterator = m_Logs->find(category);
 	if (iterator == m_Logs->end())
@@ -56,6 +81,11 @@ void MUtilityLog::SetInterest(const std::string& category, MUtilityLogLevel::Log
 
 void MUtilityLog::Log(const std::string& message, const std::string& category, MUtilityLogLevel::LogLevel logLevel, MUtilityLogMode logMode, const char* file, const char* line, const char* functionName)
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (!m_Initialized)
+		return;
+#endif
+
 	m_LogLock.lock();
 	LogMapIterator iterator = m_Logs->find(category);
 	if (iterator == m_Logs->end())
@@ -120,6 +150,11 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 
 void MUtilityLog::FlushToDisk()
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (!m_Initialized)
+		return;
+#endif
+
 	m_LogLock.lock();
 	MUtility::CreateDir("logs");
 
@@ -159,6 +194,11 @@ void MUtilityLog::SetMaxUnradMessageCount(int32_t maxUnreadMessages)
 
 bool MUtilityLog::FetchUnreadMessages(std::string& outConcatenatedMessages)
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (!m_Initialized)
+		return false;
+#endif
+
 	m_LogLock.lock();
 	bool newMessagesExists = m_UnreadMessages->size() > 0;
 
@@ -174,6 +214,11 @@ bool MUtilityLog::FetchUnreadMessages(std::string& outConcatenatedMessages)
 
 bool MUtilityLog::FetchUnreadMessages(std::vector<std::string>& outMessageList)
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (!m_Initialized)
+		return false;
+#endif
+
 	m_LogLock.lock();
 	bool newMessagesExists = m_UnreadMessages->size() > 0;
 
@@ -184,13 +229,28 @@ bool MUtilityLog::FetchUnreadMessages(std::vector<std::string>& outMessageList)
 	return newMessagesExists;
 }
 
-std::stringstream& MUtilityLog::GetInputStream()
+bool MUtilityLog::IsInitialized()
 {
-	return *m_InputStream;
+	return m_Initialized;
+}
+
+std::stringstream* MUtilityLog::GetInputStream()
+{
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (!m_Initialized)
+		return nullptr;
+#endif
+
+	return m_InputStream;
 }
 
 std::string MUtilityLog::GetLog(const std::string& category)
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (!m_Initialized)
+		return "";
+#endif
+
 	m_LogLock.lock();
 	std::string toReturn = "";
 
@@ -207,6 +267,11 @@ std::string MUtilityLog::GetLog(const std::string& category)
 
 std::string MUtilityLog::GetAllInterestLog()
 {
+#if COMPILE_MODE == COMPILE_MODE_DEBUG
+	if (!m_Initialized)
+		return "";
+#endif
+
 	m_LogLock.lock();
 	std::string toReturn = m_MainLog->str();
 	m_LogLock.unlock();

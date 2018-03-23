@@ -10,17 +10,17 @@
 
 	#if COMPILE_MODE == COMPILE_MODE_DEBUG
 
-		#define MLOG_ERROR(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_ERROR, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
-		#define MLOG_WARNING(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_WARNING, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
-		#define MLOG_INFO(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_INFO, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
-		#define MLOG_DEBUG(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_DEBUG, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream().str(std::string())
+		#define MLOG_ERROR(message, category) MUtilityLog::IsInitialized() ? *MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream()->str(), category, MUtilityLogLevel::LOG_ERROR, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream()->str(std::string()) : MUTILITY_EMPTY_EXPRESSION
+		#define MLOG_WARNING(message, category) MUtilityLog::IsInitialized() ? *MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream()->str(), category, MUtilityLogLevel::LOG_WARNING, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream()->str(std::string()) : MUTILITY_EMPTY_EXPRESSION
+		#define MLOG_INFO(message, category) MUtilityLog::IsInitialized() ? *MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream()->str(), category, MUtilityLogLevel::LOG_INFO, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream()->str(std::string()) : MUTILITY_EMPTY_EXPRESSION
+		#define MLOG_DEBUG(message, category) MUtilityLog::IsInitialized() ? *MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream()->str(), category, MUtilityLogLevel::LOG_DEBUG, MUtilityLogMode::Debug, __FILE__, MUTILITY_STRINGIFY(__LINE__), __func__), MUtilityLog::GetInputStream()->str(std::string()) : MUTILITY_EMPTY_EXPRESSION
 
 	#else
 
-		#define MLOG_ERROR(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_ERROR), MUtilityLog::GetInputStream().str(std::string())
-		#define MLOG_WARNING(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_WARNING), MUtilityLog::GetInputStream().str(std::string())
-		#define MLOG_INFO(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_INFO), MUtilityLog::GetInputStream().str(std::string())
-		#define MLOG_DEBUG(message, category) MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream().str(), category, MUtilityLogLevel::LOG_DEBUG), MUtilityLog::GetInputStream().str(std::string())
+		#define MLOG_ERROR(message, category)  MUtilityLog::IsInitialized() ? *MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream()->str(), category, MUtilityLogLevel::LOG_ERROR), MUtilityLog::GetInputStream()->str(std::string()) : MUTILITY_EMPTY_EXPRESSION
+		#define MLOG_WARNING(message, category)  MUtilityLog::IsInitialized() ? *MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream()->str(), category, MUtilityLogLevel::LOG_WARNING), MUtilityLog::GetInputStream()->str(std::string()) : MUTILITY_EMPTY_EXPRESSION
+		#define MLOG_INFO(message, category)  MUtilityLog::IsInitialized() ? *MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream()->str(), category, MUtilityLogLevel::LOG_INFO), MUtilityLog::GetInputStream()->str(std::string()) : MUTILITY_EMPTY_EXPRESSION
+		#define MLOG_DEBUG(message, category) MUtilityLog::IsInitialized() ? *MUtilityLog::GetInputStream() << message, MUtilityLog::Log(MUtilityLog::GetInputStream()->str(), category, MUtilityLogLevel::LOG_DEBUG), MUtilityLog::GetInputStream()->str(std::string()) : MUTILITY_EMPTY_EXPRESSION
 
 	#endif
 
@@ -68,7 +68,9 @@ namespace MUtilityLog
 	bool FetchUnreadMessages(std::string& outConcatenatedMessages);
 	bool FetchUnreadMessages(std::vector<std::string>& outMessageList);
 
-	std::stringstream& GetInputStream(); // Intended for MLOG macros
+	bool IsInitialized();
+
+	std::stringstream* GetInputStream(); // Intended for MLOG macros
 	std::string GetLog(const std::string& category);
 	std::string GetAllInterestLog();
 	std::string GetFullLog();
