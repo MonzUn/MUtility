@@ -65,8 +65,9 @@ namespace MUtilityLog
 
 	void SetMaxUnradMessageCount(int32_t maxUnreadMessages);
 
-	bool FetchUnreadMessages(std::string& outConcatenatedMessages);
-	bool FetchUnreadMessages(std::vector<std::string>& outMessageList);
+	bool GetUnreadMessages(std::string& outConcatenatedMessages);
+	bool GetUnreadMessages(std::vector<std::string>& outMessageList);
+	void ClearUnreadMessages();
 
 	bool IsInitialized();
 

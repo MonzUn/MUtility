@@ -1,6 +1,7 @@
 #include "Interface/MUtilityLog.h"
 #include "MUtilityLogInternal.h"
 #include "Interface/MUtilityFile.h"
+#include "Interface/MUtilitySystem.h"
 #include <atomic>
 #include <fstream>
 #include <mutex>
@@ -22,6 +23,8 @@ namespace MUtilityLog
 
 	std::atomic<bool> m_Initialized = false;
 }
+
+using namespace MUtility;
 
 // ---------- INTERFACE ----------
 
@@ -156,33 +159,42 @@ void MUtilityLog::FlushToDisk()
 #endif
 
 	m_LogLock.lock();
-	MUtility::CreateDir("logs");
+	std::string logsDir = std::string(MUtility::GetExecutableDirectoryPath() + "/logs");
+	std::string mainLogDir = logsDir + "/mainLog.txt";
+	std::string fullInterestLogDir = logsDir + "/fullInterestLog.txt";
+	std::string categoriesDir = logsDir + "/categories";
+	if(!DirectoryExists(logsDir.c_str()))
+		CreateDir(logsDir.c_str());
 
 	std::ofstream outStream;
-	outStream.open("logs/mainLog.txt", std::ofstream::out | std::ofstream::trunc);
+	outStream.open(mainLogDir, std::ofstream::out | std::ofstream::trunc);
 	if (outStream.is_open())
 	{
 		outStream << m_MainLog->rdbuf();
 		outStream.close();
 	}
 
-	outStream.open("logs/fullInterestLog.txt", std::ofstream::out | std::ofstream::trunc);
+	outStream.open(fullInterestLogDir, std::ofstream::out | std::ofstream::trunc);
 	if (outStream.is_open())
 	{
 		outStream << m_FullInterestLog->rdbuf();
 		outStream.close();
 	}
 
-	MUtility::CreateDir("logs/categories");
+	
+	if(!DirectoryExists(categoriesDir.c_str()))
+		MUtility::CreateDir(categoriesDir.c_str());
+
 	for (auto it = m_Logs->begin(); it != m_Logs->end(); ++it)
 	{
-		outStream.open("logs/categories/" + it->first + ".txt", std::ofstream::out | std::ofstream::trunc);
+		outStream.open(categoriesDir + "/" + it->first + ".txt", std::ofstream::out | std::ofstream::trunc);
 		if (outStream.is_open())
 		{
 			outStream << it->second.Log.rdbuf();
 			outStream.close();
 		}
-	}m_LogLock.unlock();
+	}
+	m_LogLock.unlock();
 }
 
 void MUtilityLog::SetMaxUnradMessageCount(int32_t maxUnreadMessages)
@@ -192,7 +204,7 @@ void MUtilityLog::SetMaxUnradMessageCount(int32_t maxUnreadMessages)
 	m_LogLock.unlock();
 }
 
-bool MUtilityLog::FetchUnreadMessages(std::string& outConcatenatedMessages)
+bool MUtilityLog::GetUnreadMessages(std::string& outConcatenatedMessages)
 {
 #if COMPILE_MODE == COMPILE_MODE_DEBUG
 	if (!m_Initialized)
@@ -206,13 +218,12 @@ bool MUtilityLog::FetchUnreadMessages(std::string& outConcatenatedMessages)
 	{
 		outConcatenatedMessages += (*m_UnreadMessages)[i];
 	}
-	m_UnreadMessages->clear();
 	m_LogLock.unlock();
 
 	return newMessagesExists;
 }
 
-bool MUtilityLog::FetchUnreadMessages(std::vector<std::string>& outMessageList)
+bool MUtilityLog::GetUnreadMessages(std::vector<std::string>& outMessageList)
 {
 #if COMPILE_MODE == COMPILE_MODE_DEBUG
 	if (!m_Initialized)
@@ -223,10 +234,16 @@ bool MUtilityLog::FetchUnreadMessages(std::vector<std::string>& outMessageList)
 	bool newMessagesExists = m_UnreadMessages->size() > 0;
 
 	outMessageList = *m_UnreadMessages;
-	m_UnreadMessages->clear();
 	m_LogLock.unlock();
 
 	return newMessagesExists;
+}
+
+void MUtilityLog::ClearUnreadMessages()
+{
+	m_LogLock.lock();
+	m_UnreadMessages->clear();
+	m_LogLock.unlock();
 }
 
 bool MUtilityLog::IsInitialized()
