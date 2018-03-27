@@ -122,9 +122,9 @@ void MUtility::Serialization::ReadBool( bool& value, const Byte*& source )
 void MUtility::Serialization::ReadString( std::string& value, const Byte*& source ) // TODODB: Optimize this one~ (Try to avoid unnecessary memory allocation)
 {
 	uint32_t stringLength;
-	CopyAndIncrementSource( &stringLength, source, INT_32_SIZE );
+	CopyAndIncrementSource(&stringLength, source, INT_32_SIZE);
 
-	char* buffer = new char[stringLength + 1]; // +1 for the null terminator //TODODB: See if we really need to place this null terminator or if it will be placed there by the std::string ctor
+	char* buffer = new char[stringLength + 1]; // +1 for the null terminator
 	CopyAndIncrementSource( buffer, source, stringLength );
 	buffer[stringLength] = '\0';
 
