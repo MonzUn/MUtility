@@ -1,5 +1,6 @@
 #include "Interface/MUtilityIDBank.h"
 #include "Interface/MUtilityMath.h"
+#include "Interface/MUtilityBitset.h"
 
 #define LOG_CATEGORY_IDBANK "IDBank"
 

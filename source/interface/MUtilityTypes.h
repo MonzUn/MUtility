@@ -1,5 +1,5 @@
 #pragma once
-#include "MUtilityByte.h"
+#include "MUtilityBitset.h"
 #include <stdint.h>
 
 #define MUTILITY_INVALID_ID -1

@@ -1,4 +1,4 @@
-#include "Interface/MUtilityByte.h"
+#include "Interface/MUtilityBitset.h"
 #include "Interface/MUtilityIntrinsics.h"
 
 using MUtility::BitSet;
