@@ -54,7 +54,7 @@ bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
 	return true;
 }
 
-MUtilityID MUtilityIDBank::PeekNextID() const // TODODB: Renamed this so it indicates that it's the next NEW ID and cannot be a recycled ID
+MUtilityID MUtilityIDBank::PeekNextNewID() const
 {
 	return m_NextID;
 }
@@ -85,6 +85,11 @@ bool MUtilityIDBank::IsIDRecycled(MUtilityID id) const
 	}
 	m_Lock.unlock();
 	return result;
+}
+
+bool MUtilityIDBank::IsIDLast(MUtilityID id) const
+{
+	return id == (m_NextID - 1);
 }
 
 uint32_t MUtilityIDBank::GetCount() const

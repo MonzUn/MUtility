@@ -16,10 +16,11 @@ namespace MUtility
 		MUtilityID GetID();
 		bool ReturnID(MUtilityID idToreturn);
 
-		MUtilityID PeekNextID() const;
+		MUtilityID PeekNextNewID() const;
 
 		bool IsIDActive(MUtilityID id) const;
 		bool IsIDRecycled(MUtilityID id) const;
+		bool IsIDLast(MUtilityID id) const;
 
 		uint32_t GetCount() const;
 
