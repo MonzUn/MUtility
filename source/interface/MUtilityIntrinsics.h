@@ -2,6 +2,10 @@
 #include "MUtilityByte.h"
 #include "MUtilityPlatformDefinitions.h"
 
+#if COMPILER == COMPILER_MSVC
+#include <intrin.h>
+#endif
+
 namespace MUtility
 {
 	template<typename T>
