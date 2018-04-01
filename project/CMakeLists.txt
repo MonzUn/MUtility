@@ -28,7 +28,7 @@ ADD_LIBRARY( ${PROJECT_NAME} STATIC
 )
 
 # Set output directory
-set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ProjectRootAbsolute}/output/)
+set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${ProjectRootAbsolute}/output/")
 
 # Make sure that the linker language gets set to C++
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
