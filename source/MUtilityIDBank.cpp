@@ -7,97 +7,6 @@
 using namespace MUtility;
 using MUtility::BitSet;
 
-// ---------- MUtilityIDBank ----------
-
-MUtilityID MUtilityIDBank::GetID()
-{
-	MUtilityID toReturn;
-	m_Lock.lock();
-	if (m_RecycledIDs.size() > 0)
-	{
-		toReturn = m_RecycledIDs.front();
-		m_RecycledIDs.pop_front();
-	}
-	else
-	{
-		toReturn = m_NextID++;
-	}
-	++m_Count;
-	m_Lock.unlock();
-
-	return toReturn;
-}
-
-bool MUtilityIDBank::ReturnID(MUtilityID idToreturn)
-{
-	if (idToreturn < 0)
-		return false;
-
-	if (idToreturn >= m_NextID)
-	{
-		MLOG_WARNING("Attempted to return an ID that has not yet been assigned; ID = " << idToreturn, LOG_CATEGORY_IDBANK);
-		return false;
-	}
-
-#if COMPILE_MODE == COMPILE_MODE_DEBUG
-	if (IsIDRecycled(idToreturn))
-	{
-		MLOG_WARNING("Attempted to return an already returned ID; ID = " << idToreturn, LOG_CATEGORY_IDBANK);
-		return false;
-	}
-#endif
-
-	m_Lock.lock();
-	m_RecycledIDs.push_back(idToreturn);
-	m_Lock.unlock();
-	--m_Count;
-
-	return true;
-}
-
-MUtilityID MUtilityIDBank::PeekNextNewID() const
-{
-	return m_NextID;
-}
-
-bool MUtilityIDBank::IsIDActive(MUtilityID id) const
-{
-	if (id < 0)
-		return false;
-
-	bool result = false;
-	if (id < m_NextID && !IsIDRecycled(id))
-		result = true;
-
-	return result;
-}
-
-bool MUtilityIDBank::IsIDRecycled(MUtilityID id) const
-{
-	bool result = false;
-	m_Lock.lock();
-	for (int i = 0; i < m_RecycledIDs.size(); ++i)
-	{
-		if (m_RecycledIDs[i] == id)
-		{
-			result = true;
-			break;
-		}
-	}
-	m_Lock.unlock();
-	return result;
-}
-
-bool MUtilityIDBank::IsIDLast(MUtilityID id) const
-{
-	return id == (m_NextID - 1);
-}
-
-uint32_t MUtilityIDBank::GetCount() const
-{
-	return m_Count;
-}
-
 // ---------- MUtilityBitMaskIDBank ----------
 
 MUtilityBitmaskID MUtilityBitMaskIDBank::GetID()
@@ -158,10 +67,7 @@ MUtilityBitmaskID MUtilityBitMaskIDBank::PeekNextID() const
 
 bool MUtilityBitMaskIDBank::IsIDActive(MUtilityBitmaskID id) const
 {
-	if (id == MUtility::EMPTY_BITSET)
-		return false;
-
-	return !IsIDRecycled(id) && id < m_NextID;
+	return id != MUtility::EMPTY_BITSET && id < m_NextID && !IsIDRecycled(id);
 }
 
 bool MUtilityBitMaskIDBank::IsIDRecycled(MUtilityBitmaskID id) const
