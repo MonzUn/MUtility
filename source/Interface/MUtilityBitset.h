@@ -14,8 +14,8 @@ bool operator!=(const BitFlagType& lhs, const std::underlying_type_t<BitFlagType
 bool operator==(const std::underlying_type_t<BitFlagType>& lhs, const BitFlagType& rhs);\
 bool operator!=(const std::underlying_type_t<BitFlagType>& lhs, const BitFlagType& rhs)
 
-// Use in .cpp files if CREATE_BITFLAG_OPERATOR_SIGNATURES has been used in the header file
-#define CREATE_BITFLAG_OPERATOR_DEFINITIONS(Namespace, BitFlagType) \
+// Use in .cpp files if CREATE_BITFLAG_OPERATOR_SIGNATURES has been used in the header file and the BitFlag definition is located in a namespace
+#define CREATE_NAMESPACED_BITFLAG_OPERATOR_DEFINITIONS(Namespace, BitFlagType) \
 Namespace::BitFlagType Namespace::operator|(const Namespace::BitFlagType& lhs, const Namespace::BitFlagType& rhs) { return static_cast<const Namespace::BitFlagType>(static_cast<const std::underlying_type_t<Namespace::BitFlagType>>(lhs) | static_cast<const std::underlying_type_t<Namespace::BitFlagType>>(rhs)); }\
 Namespace::BitFlagType Namespace::operator&(const Namespace::BitFlagType& lhs, const Namespace::BitFlagType& rhs) { return static_cast<const Namespace::BitFlagType>(static_cast<const std::underlying_type_t<Namespace::BitFlagType>>(lhs) & static_cast<const std::underlying_type_t<Namespace::BitFlagType>>(rhs)); }\
 Namespace::BitFlagType& Namespace::operator|=(Namespace::BitFlagType& lhs, const Namespace::BitFlagType& rhs) { return lhs = (lhs | rhs); }\
@@ -24,6 +24,17 @@ bool Namespace::operator==(const Namespace::BitFlagType& lhs, const std::underly
 bool Namespace::operator!=(const Namespace::BitFlagType& lhs, const std::underlying_type_t<Namespace::BitFlagType>& rhs) { return static_cast<const std::underlying_type_t<Namespace::BitFlagType>>(lhs) != rhs; };\
 bool Namespace::operator==(const std::underlying_type_t<Namespace::BitFlagType>& lhs, const Namespace::BitFlagType& rhs) { return lhs == static_cast<const std::underlying_type_t<Namespace::BitFlagType>>(rhs); };\
 bool Namespace::operator!=(const std::underlying_type_t<Namespace::BitFlagType>& lhs, const Namespace::BitFlagType& rhs) { return lhs != static_cast<const std::underlying_type_t<Namespace::BitFlagType>>(rhs); }
+
+// Use in .cpp files if CREATE_BITFLAG_OPERATOR_SIGNATURES has been used in the header file and the BitFlag definition is not located in a namespace
+#define CREATE_BITFLAG_OPERATOR_DEFINITIONS(BitFlagType) \
+BitFlagType operator|(const BitFlagType& lhs, const BitFlagType& rhs) { return static_cast<const BitFlagType>(static_cast<const std::underlying_type_t<BitFlagType>>(lhs) | static_cast<const std::underlying_type_t<BitFlagType>>(rhs)); }\
+BitFlagType operator&(const BitFlagType& lhs, const BitFlagType& rhs) { return static_cast<const BitFlagType>(static_cast<const std::underlying_type_t<BitFlagType>>(lhs) & static_cast<const std::underlying_type_t<BitFlagType>>(rhs)); }\
+BitFlagType& operator|=(BitFlagType& lhs, const BitFlagType& rhs) { return lhs = (lhs | rhs); }\
+BitFlagType& operator&=(BitFlagType& lhs, const BitFlagType& rhs) { return lhs = (lhs & rhs); }\
+bool operator==(const BitFlagType& lhs, const std::underlying_type_t<BitFlagType>& rhs) { return static_cast<const std::underlying_type_t<BitFlagType>>(lhs) == rhs; };\
+bool operator!=(const BitFlagType& lhs, const std::underlying_type_t<BitFlagType>& rhs) { return static_cast<const std::underlying_type_t<BitFlagType>>(lhs) != rhs; };\
+bool operator==(const std::underlying_type_t<BitFlagType>& lhs, const BitFlagType& rhs) { return lhs == static_cast<const std::underlying_type_t<BitFlagType>>(rhs); };\
+bool operator!=(const std::underlying_type_t<BitFlagType>& lhs, const BitFlagType& rhs) { return lhs != static_cast<const std::underlying_type_t<BitFlagType>>(rhs); }
 
 // Use in header file if mutliple definitions is not a problem
 #define CREATE_BITFLAG_OPERATOR_SIGNATURES_AND_DEFINITIONS(BitFlagType) \
