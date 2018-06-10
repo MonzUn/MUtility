@@ -1,7 +1,8 @@
 #include "Interface/MUtilityString.h"
+#include <algorithm>
 #include <cctype>
 
-bool MUtilityString::IsStringNumber(const std::string& string)
+bool MUtility::IsStringNumber(const std::string& string)
 {
 	if(string.empty())
 		return false;
@@ -14,7 +15,7 @@ bool MUtilityString::IsStringNumber(const std::string& string)
 	return it == string.end();
 }
 
-bool MUtilityString::IsStringNumberExcept(const std::string& string, char exception, uint32_t maxExceptions)
+bool MUtility::IsStringNumberExcept(const std::string& string, char exception, uint32_t maxExceptions) // TODODB: Take string as exception and except on all characters in that string
 {
 	std::string::const_iterator it = string.begin();
 	uint32_t exceptionCount = 0;
@@ -35,4 +36,21 @@ bool MUtilityString::IsStringNumberExcept(const std::string& string, char except
 	}
 
 	return !string.empty() && it == string.end();
+}
+
+int32_t MUtility::StringToInt(const std::string& str)
+{
+	return IsStringNumber(str) ? std::stoi(str) : -1;
+}
+
+double MUtility::StringToDouble(const std::string& str)
+{
+	return (MUtility::IsStringNumberExcept(str, '.', 1) || MUtility::IsStringNumberExcept(str, ',', 1)) ? std::stod(str) : -1.0f;
+}
+
+bool MUtility::StringToBool(const std::string& str)
+{
+	std::string lowerCaseStr = str;
+	std::transform(lowerCaseStr.begin(), lowerCaseStr.end(), lowerCaseStr.begin(), ::tolower);
+	return lowerCaseStr == "true" ? true : false;
 }
