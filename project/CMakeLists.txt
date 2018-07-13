@@ -14,6 +14,7 @@ get_filename_component(ProjectRootAbsolute ${ProjectRoot} ABSOLUTE)
 # Visual Studio settings
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _CRT_SECURE_NO_WARNINGS")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D NOMINMAX")
 endif(MSVC)
 
 # List source file directories
