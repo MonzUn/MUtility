@@ -18,6 +18,8 @@ namespace MUtilityLog
 	std::stringstream* m_MainLog;
 	std::stringstream* m_FullInterestLog;
 
+	MUtilityLogOutputTrigger m_OutputTrigger = MUtilityLogOutputTrigger::Shutdown;
+
 	std::mutex m_LogLock;
 	int32_t m_MaxUnreadMessages = 100;
 
@@ -54,8 +56,8 @@ void MUtilityLog::Shutdown()
 	if (!m_Initialized)
 		return;
 #endif
-
-	FlushToDisk();
+	if(m_OutputTrigger == MUtilityLogOutputTrigger::Shutdown)
+		FlushToDisk();
 
 	delete m_Logs;
 	delete m_UnreadMessages;
@@ -149,6 +151,10 @@ void MUtilityLog::Log(const std::string& message, const std::string& category, M
 	}
 	*m_FullInterestLog << fullMessage;
 	m_LogLock.unlock();
+
+
+	if(m_OutputTrigger == MUtilityLogOutputTrigger::Log)
+		FlushToDisk();
 }
 
 void MUtilityLog::FlushToDisk()
@@ -170,14 +176,14 @@ void MUtilityLog::FlushToDisk()
 	outStream.open(mainLogDir, std::ofstream::out | std::ofstream::trunc);
 	if (outStream.is_open())
 	{
-		outStream << m_MainLog->rdbuf();
+		outStream << m_MainLog->str();
 		outStream.close();
 	}
 
 	outStream.open(fullInterestLogDir, std::ofstream::out | std::ofstream::trunc);
 	if (outStream.is_open())
 	{
-		outStream << m_FullInterestLog->rdbuf();
+		outStream << m_FullInterestLog->str();
 		outStream.close();
 	}
 
@@ -190,7 +196,7 @@ void MUtilityLog::FlushToDisk()
 		outStream.open(categoriesDir + "/" + it->first + ".txt", std::ofstream::out | std::ofstream::trunc);
 		if (outStream.is_open())
 		{
-			outStream << it->second.Log.rdbuf();
+			outStream << it->second.Log.str();
 			outStream.close();
 		}
 	}
@@ -301,6 +307,16 @@ std::string MUtilityLog::GetFullLog()
 	std::string toReturn = m_FullInterestLog->str();
 	m_LogLock.unlock();
 	return toReturn;
+}
+
+MUtilityLogOutputTrigger MUtilityLog::GetOutputTrigger()
+{
+	return m_OutputTrigger;
+}
+
+void MUtilityLog::SetOutputTrigger(MUtilityLogOutputTrigger newTrigger)
+{
+	m_OutputTrigger = newTrigger;
 }
 
 // ---------- INTERNAL ----------

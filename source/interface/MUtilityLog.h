@@ -54,6 +54,12 @@ enum class MUtilityLogMode
 	Debug
 };
 
+enum class MUtilityLogOutputTrigger
+{
+	Shutdown,
+	Log,
+};
+
 namespace MUtilityLog
 {
 	void Initialize();
@@ -75,4 +81,7 @@ namespace MUtilityLog
 	std::string GetLog(const std::string& category);
 	std::string GetAllInterestLog();
 	std::string GetFullLog();
+
+	MUtilityLogOutputTrigger GetOutputTrigger();
+	void SetOutputTrigger(MUtilityLogOutputTrigger newTrigger);
 };
