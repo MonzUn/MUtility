@@ -191,12 +191,12 @@ void MUtilityLog::FlushToDisk()
 	if(!DirectoryExists(categoriesDir.c_str()))
 		MUtility::CreateDir(categoriesDir.c_str());
 
-	for (auto it = m_Logs->begin(); it != m_Logs->end(); ++it)
+	for (auto& log : *m_Logs)
 	{
-		outStream.open(categoriesDir + "/" + it->first + ".txt", std::ofstream::out | std::ofstream::trunc);
+		outStream.open(categoriesDir + "/" + log.first + ".txt", std::ofstream::out | std::ofstream::trunc);
 		if (outStream.is_open())
 		{
-			outStream << it->second.Log.str();
+			outStream << log.second.Log.str();
 			outStream.close();
 		}
 	}
@@ -218,11 +218,11 @@ bool MUtilityLog::GetUnreadMessages(std::string& outConcatenatedMessages)
 #endif
 
 	m_LogLock.lock();
-	bool newMessagesExists = m_UnreadMessages->size() > 0;
+	bool newMessagesExists = !m_UnreadMessages->empty();
 
-	for (int i = 0; i < m_UnreadMessages->size(); ++i)
+	for (const std::string& unreadMessage : *m_UnreadMessages)
 	{
-		outConcatenatedMessages += (*m_UnreadMessages)[i];
+		outConcatenatedMessages += unreadMessage;
 	}
 	m_LogLock.unlock();
 
@@ -237,7 +237,7 @@ bool MUtilityLog::GetUnreadMessages(std::vector<std::string>& outMessageList)
 #endif
 
 	m_LogLock.lock();
-	bool newMessagesExists = m_UnreadMessages->size() > 0;
+	bool newMessagesExists = !m_UnreadMessages->empty();
 
 	outMessageList = *m_UnreadMessages;
 	m_LogLock.unlock();

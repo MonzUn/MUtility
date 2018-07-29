@@ -32,7 +32,7 @@ std::string MUtility::GetExecutableDirectoryPath() // TODODB: Implement support 
 		return "Executable path is only available on the windows platform";
 #else
 		char path[EXECUTABLE_PATH_MAX_LENGTH];
-		GetModuleFileName(NULL, path, EXECUTABLE_PATH_MAX_LENGTH);
+		GetModuleFileName(nullptr, path, EXECUTABLE_PATH_MAX_LENGTH);
 		PathRemoveFileSpec(path);
 		returnPath = path;
 		std::replace(returnPath.begin(), returnPath.end(), '\\', '/');
@@ -47,7 +47,7 @@ void MUtility::OpenBrowserOnURL(const char* URL)
 	MLOG_WARNING("Function called on non supported system", LOG_CATEGORY_SYSTEM);
 	return;
 #else
-	ShellExecute(0,0, URL, 0, 0, SW_SHOW);
+	ShellExecute(nullptr, nullptr, URL, nullptr, nullptr, SW_SHOW);
 #endif
 }
 

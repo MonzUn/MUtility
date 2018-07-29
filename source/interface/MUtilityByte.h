@@ -1,5 +1,4 @@
 #pragma once
-#include "MUtilityPlatformDefinitions.h"
 #include <limits.h>
 #include <stdint.h>
 
