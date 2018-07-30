@@ -1,10 +1,13 @@
 #include "Interface/MUtilitySystem.h"
 #include "Interface/MUtilityLog.h"
 #include <algorithm>
+#include <iomanip>
+#include <stdlib.h>
+#include <sstream>
 
 #if PLATFORM == PLATFORM_WINDOWS
+#include <comdef.h>
 #include <process.h>
-
 #include <Shlwapi.h>
 #pragma comment(lib, "shlwapi.lib")
 #else
@@ -72,3 +75,20 @@ void MUtility::UnblockSTDIn()
 	WriteConsoleInput(GetStdHandle(STD_INPUT_HANDLE), inputRecord, 2, &temp);
 #endif
 }
+
+
+
+#if PLATFORM == PLATFORM_WINDOWS
+std::string MUtility::GetHResultErrorCodeString(HRESULT result)
+{
+	std::stringstream stream;
+	stream << "0x" << std::setfill('0') << std::setw(sizeof(HRESULT) * 2) << std::hex << result;
+	return stream.str();
+}
+
+std::string MUtility::GetHResultErrorDescriptionString(HRESULT result)
+{
+	_com_error err(result);
+	return err.ErrorMessage();
+}
+#endif
