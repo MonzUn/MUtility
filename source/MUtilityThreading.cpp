@@ -11,7 +11,7 @@ void MUtilityThreading::JoinThread(std::thread& thread)
 		MLOG_WARNING("Attempted to join unjoinable thread", LOG_CATEGORY_THREADING);
 }
 
-void MUtilityThreading::LockMutexes(std::initializer_list<std::mutex*>& mutexes)
+void MUtilityThreading::LockMutexes(std::initializer_list<std::mutex*> mutexes)
 {
 	for (auto& mutex : mutexes)
 	{
@@ -19,7 +19,7 @@ void MUtilityThreading::LockMutexes(std::initializer_list<std::mutex*>& mutexes)
 	}
 }
 
-void MUtilityThreading::UnlockMutexes(std::initializer_list<std::mutex*>& mutexes)
+void MUtilityThreading::UnlockMutexes(std::initializer_list<std::mutex*> mutexes)
 {
 	for (auto& mutex : mutexes)
 	{
