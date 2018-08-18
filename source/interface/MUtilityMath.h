@@ -1,7 +1,13 @@
 #pragma once
+#include "MUtilityIntrinsics.h"
+#include <cassert>
 #include <stdint.h>
 
 namespace MUtilityMath
 {
-	uint32_t FastLog2(uint64_t value);
+	inline uint32_t FastLog2(uint64_t value)
+	{
+		assert(value > 0 && "Atempting to calculate Log2 of 0");
+		return static_cast<uint32_t>(MUtility::BitscanReverse(value));
+	}
 }
