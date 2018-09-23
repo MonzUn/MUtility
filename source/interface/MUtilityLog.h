@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 
+// TODODB: Make MLOG_DEBUG write to a separate category so that category doesn't have to be specified when writing debug logs
 #ifndef MUTILITY_DISABLE_LOGGING
 
 	#if COMPILE_MODE == COMPILE_MODE_DEBUG
