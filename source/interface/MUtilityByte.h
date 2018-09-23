@@ -9,7 +9,7 @@ namespace MUtility
 	constexpr int32_t BITS_PER_BYTE = CHAR_BIT;
 	
 	template <typename T>
-	uint64_t BitSizeof(const T& type)
+	inline uint64_t BitSizeof(const T& type)
 	{
 		return sizeof(T) * BITS_PER_BYTE;
 	}
