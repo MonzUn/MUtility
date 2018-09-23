@@ -58,8 +58,8 @@ namespace MUtility
 	uint64_t	GetSetBitCount(const BitSet& bitset);
 	BitSet		GetLowestSetBit(const BitSet& bitset);
 	BitSet		GetHighestSetBit(const BitSet& bitset);
-	int32_t		GetLowestSetBitIndex(const BitSet& bitset);
-	int32_t		GetHighestSetBitIndex(const BitSet& bitset);
+	int64_t		GetLowestSetBitIndex(const BitSet& bitset);
+	int64_t		GetHighestSetBitIndex(const BitSet& bitset);
 
 	bool		IsBitSet(const BitSet& bitset, uint32_t indexToTest);
 

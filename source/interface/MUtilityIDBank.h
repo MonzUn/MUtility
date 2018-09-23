@@ -1,8 +1,8 @@
 #pragma once
 #include "MUtilityByte.h"
-#include "MUtilityLog.h"
+#include "MUtilityDynamicBitset.h"
+#include "MUtilityThreading.h"
 #include "MUtilityTypes.h"
-#include "MUtilityStrongID.h"
 #include <atomic>
 #include <cassert>
 #include <deque>
@@ -10,27 +10,44 @@
 #include <stdint.h>
 #include <type_traits>
 
+#pragma warning( push )
+#pragma warning( disable : 4018) // Fix issues causing these warnings (See comment regarding these warnings further down)
+#pragma warning( disable : 4244)
+
 namespace MUtility
 {
 	template<typename IDType>
 	class MUtilityIDBank // TODODB: Remove redundant MUTility from name
 	{
 	public:
+		MUtilityIDBank() = default;
+		MUtilityIDBank(const MUtilityIDBank& other)
+		{
+			MUtilityThreading::LockMutexes({&m_Lock, &other.m_Lock});
+			m_NextID = other.m_NextID.load();
+			m_IDBitSet = other.m_IDBitSet;
+			m_Count = other.m_Count.load();
+			MUtilityThreading::UnlockMutexes({&m_Lock, &other.m_Lock});
+		}
+		~MUtilityIDBank() = default;
+
 		IDType GetID()
 		{
 			IDType toReturn;
 			m_Lock.lock();
-			if (m_RecycledIDs.size() > 0)
+			toReturn = IDType(m_IDBitSet.FindFirstUnsetBitExpand());
+			if (toReturn == -1)
 			{
-				toReturn = m_RecycledIDs.front();
-				m_RecycledIDs.pop_front();
+				toReturn = IDType(m_IDBitSet.Capacity());
+				m_IDBitSet.Reserve();
 			}
-			else
-			{
-				toReturn = IDType(m_NextID++);
-			}
-			++m_Count;
+			m_IDBitSet.Set(toReturn);
 			m_Lock.unlock();
+
+			if(toReturn == m_NextID)
+				++m_NextID;
+
+			++m_Count;
 
 			return toReturn;
 		}
@@ -38,17 +55,20 @@ namespace MUtility
 		bool ReturnID(IDType toReturn)
 		{
 			if (toReturn < 0 || toReturn >= m_NextID)
+			{
+				assert(false && "Attempted to return an invalid ID");
 				return false;
+			}
 
 #if COMPILE_MODE == COMPILE_MODE_DEBUG
-			if (IsIDRecycled(toReturn))
+			if (IsIDInactive(toReturn))
 			{
-				assert(false && "Attempted to return the same ID multiple times. This check is removed in release mode so if this asserts is triggered in debug mode it could cause issues in release mode");
+				assert(false && "Attempted to return the same ID multiple times. This check is removed in release mode so if this asserts is triggered in debug mode it could cause issues in release mode"); // TODODB: Create a system for managing asserts depending on level of importance
 				return false;
 			}
 #endif
 			m_Lock.lock();
-			m_RecycledIDs.push_back(toReturn);
+			m_IDBitSet.Reset(toReturn);
 			m_Lock.unlock();
 			--m_Count;
 
@@ -60,46 +80,56 @@ namespace MUtility
 			return IDType(m_NextID);
 		}
 
-		bool IsIDActive(IDType ID) const
+		bool IsIDValid(IDType ID) const
 		{
-			return ID >= 0 && ID < m_NextID && !IsIDRecycled(ID);
+			return ID >= 0 && ID < m_NextID;;
 		}
 
-		bool IsIDRecycled(IDType ID) const
+		bool IsIDActive(IDType ID) const
 		{
-			bool result = false;
 			m_Lock.lock();
-			for (int i = 0; i < m_RecycledIDs.size(); ++i)
-			{
-				if (m_RecycledIDs[i] == ID)
-				{
-					result = true;
-					break;
-				}
-			}
+			bool result = ID >= 0 && ID < m_NextID && m_IDBitSet.Test(ID);
 			m_Lock.unlock();
+
 			return result;
 		}
 
-		bool IsIDLast(IDType ID) const
+		bool IsIDInactive(IDType ID) const
+		{
+			m_Lock.lock();
+			bool result = ID < 0 || ID >= m_NextID || !m_IDBitSet.Test(ID);
+			m_Lock.unlock();
+
+			return result;
+		}
+
+		bool IsIDHighest(IDType ID) const
 		{
 			return ID == (m_NextID - 1);
 		}
 
-		uint32_t GetCount() const
+		uint32_t GetTotalCount() const
+		{
+			return m_NextID;
+		}
+
+		uint32_t GetActiveCount() const
 		{
 			return m_Count;
 		}
 
 	private:
-		std::atomic<int32_t>	m_NextID = 0;
-		std::deque<IDType>		m_RecycledIDs;
+		std::atomic<int32_t>	m_NextID = 0; // TODODB: This needs some kind of templating to work with both strongIDs and regular integer IDs (Triggers warning C4018 and C4244)
+		DynamicBitset			m_IDBitSet;
 		std::atomic<uint32_t>	m_Count = 0;
 
 		mutable std::mutex m_Lock;
 	};
 
-	class MUtilityBitMaskIDBank // TODODB: Remove redundant MUtility from name
+	// TODODB: Remove redundant MUtility from name
+	// TODODB: Update to use bitset like regular template version
+	// TDODDB: See if this can be made a tempalte specialization of the regular templated version
+	class MUtilityBitMaskIDBank 
 	{
 	public:
 		MUtilityBitmaskID GetID();
@@ -118,3 +148,5 @@ namespace MUtility
 		std::atomic<uint32_t>			m_Count = 0;
 	};
 }
+
+#pragma warning( pop )

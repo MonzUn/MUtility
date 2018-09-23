@@ -18,20 +18,30 @@ BitSet MUtility::GetHighestSetBit(const BitSet& bitset)
 	return static_cast<BitSet>(1) << GetHighestSetBitIndex(bitset);
 }
 
-int32_t MUtility::GetLowestSetBitIndex(const BitSet& bitset)
+int64_t MUtility::GetLowestSetBitIndex(const BitSet& bitset)
 {
 	if (bitset == EMPTY_BITSET)
 		return -1;
 
-	return BitscanForward(bitset);
+	int64_t toReturn = -1;
+	unsigned long result;
+	if(BitscanForward(bitset, &result))
+		toReturn = result;
+
+	return toReturn;
 }
 
-int32_t MUtility::GetHighestSetBitIndex(const BitSet& bitset)
+int64_t MUtility::GetHighestSetBitIndex(const BitSet& bitset)
 {
 	if (bitset == EMPTY_BITSET)
 		return -1;
 
-	return BitscanReverse(bitset);
+	int64_t toReturn = -1;
+	unsigned long result;
+	if (BitscanReverse(bitset, &result))
+		toReturn = result;
+
+	return toReturn;
 }
 
 bool MUtility::IsBitSet(const BitSet& bitset, uint32_t indexToTest)
